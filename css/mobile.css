@@ -1,0 +1,164 @@
+/* ==========================================================================
+   Mobile / narrow-viewport adaptation (< 880px, or very tall aspect ratios).
+   Same content, same three fonts, same dark/light section tones — but laid
+   out as a normal stacked flow instead of the pixel-exact 6000x3375 canvas,
+   and the waveform nav is replaced by a compact scrollable label bar.
+   Per the brief: adapt the layout, don't redesign the concept.
+   ========================================================================== */
+
+.flow-mode .nav-frame,
+.flow-mode .stage-mode-only { display: none !important; }
+
+.flow-mode .journey { scroll-snap-type: y proximity; }
+
+.flow-mode .section {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  scroll-snap-align: start;
+  display: block;
+  overflow: hidden;
+  padding: 108px 22px 64px;
+}
+/* fill the section's own padding with an approximate tone colour instead of
+   plain black, so the seam between stacked sections doesn't look like a
+   dropout — cover.jpg/outro art are dark and near-black already, so only
+   the two shared bg tones need a swatch. */
+.flow-mode .section[data-section="intro"],
+.flow-mode .section[data-section="drop"],
+.flow-mode .section[data-section="peak"] { background: #49448b; }
+.flow-mode .section[data-section="build"],
+.flow-mode .section[data-section="break"],
+.flow-mode .section[data-section="release"] { background: #8a91ca; }
+
+.flow-mode .stage {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: calc(100vh - 108px - 64px);
+  transform: none;
+  /* Unlike stage-mode, sections here are in normal document flow, so more
+     than one can be partly on-screen at once — every stage must stay
+     visible regardless of which one is "active" for nav-highlight purposes. */
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.flow-mode .stage__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.flow-mode .stage > *:not(.stage__bg) { position: relative; z-index: 1; }
+
+.flow-mode .el {
+  position: static;
+  width: 100% !important;
+  height: auto !important;
+  left: auto; top: auto;
+}
+.flow-mode .el img { width: 100%; height: auto; object-fit: cover; }
+
+/* photo grids / card grids collapse to 2-up (or 1-up when noted) */
+.flow-mode .m-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.flow-mode .m-grid-1 { display: flex; flex-direction: column; gap: 14px; }
+.flow-mode .m-grid-2 .el, .flow-mode .m-grid-1 .el { width: 100% !important; }
+
+.flow-mode .h-kicker {
+  font-size: clamp(30px, 9vw, 44px);
+  letter-spacing: 2px;
+  white-space: normal;
+  margin: 0 0 6px;
+}
+.flow-mode .h-title {
+  font-size: clamp(24px, 7vw, 32px);
+  letter-spacing: 2px;
+  margin: 14px 0 10px;
+}
+.flow-mode .body-copy {
+  font-size: clamp(15px, 4.1vw, 18px);
+  line-height: 1.55;
+  text-align: left;
+  letter-spacing: 0.2px;
+}
+.flow-mode .bio-copy {
+  font-size: clamp(15px, 4.1vw, 18px);
+  line-height: 1.55;
+  text-align: left;
+  letter-spacing: 0.2px;
+}
+.flow-mode .bio-copy p + p { margin-top: 12px; }
+.flow-mode .body-copy.is-list,
+.flow-mode .body-copy.is-center { text-align: center; }
+.flow-mode .h-hero-link {
+  font-size: clamp(34px, 11vw, 54px);
+  line-height: 1.15;
+  white-space: normal;
+}
+.flow-mode .mood-card__cap { position: static; font-size: 14px; line-height: 1.4; margin-top: 8px; }
+.flow-mode .info-card__text { gap: 14px; }
+.flow-mode .caption-copy { font-size: 14px; text-align: left !important; }
+.flow-mode .email-link { font-size: clamp(15px, 4vw, 19px); }
+
+.flow-mode .logo-link { width: 220px; height: auto; margin: 0 auto; }
+.flow-mode .logo-link img { object-position: center; }
+
+/* --- compact mobile nav: fixed top bar, tap to jump, active underline --- */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 60;
+  padding: 14px 14px 10px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+.mobile-nav::-webkit-scrollbar { display: none; }
+
+.flow-mode .mobile-nav { display: block; }
+
+.mobile-nav__item {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 1.6px;
+  color: rgba(255,255,255,0.65);
+  padding: 6px 12px;
+  border-bottom: 2px solid transparent;
+  transition: color 250ms ease, border-color 250ms ease;
+}
+.mobile-nav__item.is-active {
+  color: #fff;
+  border-color: rgb(var(--blue-glow));
+  text-shadow: 0 0 12px rgba(var(--blue-glow), 0.8);
+}
+body.on-cover .mobile-nav__item { color: rgba(255,255,255,0.65); border-color: transparent; text-shadow: none; }
+
+
+/* --- mobile sizing for the reference-accurate elements ------------------- */
+.flow-mode .h-kicker { display: block; }
+.flow-mode .card-list {
+  font-size: clamp(14px, 3.9vw, 17px);
+  line-height: 1.5;
+  text-align: center;
+}
+.flow-mode .intro-lines { font-size: clamp(15px, 4.1vw, 18px); line-height: 1.5; }
+.flow-mode .intro-lines p + p { margin-top: 8px; }
+.flow-mode .mood-cap { font-size: 13px; line-height: 1.35; margin-top: 6px; }
+.flow-mode .connector { display: none; }
+.flow-mode .bullet-list { font-size: clamp(15px, 4.1vw, 18px); line-height: 1.55; }
+.flow-mode .bullet-list li { padding-left: 20px; }
+.flow-mode .bullet-list.is-justify li { text-align: left; }
+.flow-mode .soundcloud-label { font-size: 16px; letter-spacing: 1.2px; justify-content: flex-start; }
+.flow-mode .soundcloud-icon { width: 44px; height: 44px; }
+.flow-mode .speech-bubble { width: 150px !important; height: 104px !important; }
+.flow-mode .speech-bubble span { font-size: 13px; }
+.flow-mode .outro-cutout { max-height: 320px; object-position: bottom left; }
