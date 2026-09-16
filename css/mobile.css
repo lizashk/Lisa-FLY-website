@@ -63,7 +63,10 @@
   height: auto !important;
   left: auto; top: auto;
 }
-.flow-mode .el img { width: 100%; height: auto; object-fit: cover; }
+/* Reserve each photo's design aspect ratio (already encoded in the --w/--h
+   custom properties every .el carries) so the stacked layout doesn't jump
+   as images load in on a mobile connection. */
+.flow-mode .el img { width: 100%; height: auto; aspect-ratio: var(--w) / var(--h); object-fit: cover; }
 
 /* photo grids / card grids collapse to 2-up (or 1-up when noted) */
 .flow-mode .m-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
