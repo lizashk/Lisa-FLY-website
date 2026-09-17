@@ -1,0 +1,232 @@
+/* ==========================================================================
+   Typography tokens (sampled directly from Figma text nodes) + per-section
+   desktop styling. Positions/sizes for each element come from --l/--t/--w/--h
+   custom properties set inline in the HTML (see .el in base.css); this file
+   only carries type, color and component treatment.
+   ========================================================================== */
+
+/* Page kicker heading, e.g. "artist profile" / "sound profile" — Glitch
+   Inside 161px / tracking 4.83px, sampled from the intro section. */
+.h-kicker {
+  font-family: var(--font-display);
+  font-size: 161px;
+  line-height: 1;
+  letter-spacing: 4.83px;
+  font-weight: 400;
+  white-space: nowrap;
+  margin: 0;
+}
+/* The element spans exactly the waveform BARS band (canvas y 110-290) and
+   centres its single line inside it, so the page title's optical centre
+   matches the bars' centre — not the bars+labels block. */
+.stage-mode .h-kicker { display: flex; align-items: center; }
+
+/* Card / block category title, e.g. "genre" "energy" — Bebas Neue 111px /
+   tracking 4.44px, sampled from the build-up energy card. Desktop instances
+   that need a smaller fitted size (to stay on one line in a tighter Figma
+   box) set --fit inline; that only applies in stage-mode, so it can never
+   fight the mobile clamp() below (see mobile.css). */
+.h-title {
+  font-family: var(--font-title);
+  /* Bebas Neue ships Regular only — h2's default bold makes the browser
+     synthesise a faux bold, which reads heavier, squashed and pixelated.
+     Pin the weight so the real glyphs are used. */
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 4.44px;
+  text-align: center;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.stage-mode .h-title { font-size: var(--fit, 111px); }
+.stage-mode .h-title.is-fitted { white-space: nowrap; }
+
+/* Body / list copy — Hemi Head Bold 60px / tracking 0.6px / line-height
+   93px, sampled from the intro bio and the build-up card lists. Same --fit
+   convention as .h-title for one-off desktop instances (e.g. captions). */
+.body-copy {
+  font-family: var(--font-body);
+  line-height: 93px;
+  letter-spacing: 0.6px;
+  text-align: justify;
+}
+.stage-mode .body-copy { font-size: var(--fit, 60px); }
+.body-copy p { margin: 0; }
+.body-copy.is-list { text-align: center; text-transform: lowercase; }
+.body-copy.is-center { text-align: center; }
+
+/* intro bio: justified, tight paragraph rhythm matching the reference */
+.bio-copy { font-family: var(--font-body); line-height: 93px; letter-spacing: 0.6px; text-align: justify; }
+.bio-copy p { margin: 0; }
+.stage-mode .bio-copy { font-size: 60px; }
+
+/* Small caption-weight text (peak "find more mixes here", outro's email
+   line, the "DJ KITAS" aside) — same --fit convention. */
+.caption-copy {
+  font-family: var(--font-body);
+  letter-spacing: 0.5px;
+  line-height: 1.25;
+}
+.stage-mode .caption-copy { font-size: var(--fit, 44px); }
+
+/* Hero CTA (outro "let's DANCE together") */
+.h-hero-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 154px;
+  line-height: 101px;
+  letter-spacing: 3.22px;
+  text-transform: lowercase;
+  text-align: center;
+  white-space: nowrap;
+  color: #ece4fb;
+  text-shadow: -2px 5px 11px rgba(0,0,0,0.33);
+  cursor: pointer;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+.h-hero-link:hover { opacity: 0.85; transform: translateY(-4px); }
+
+/* Section text-colour tone: dark bg -> white type, light bg -> near-black */
+.section[data-tone="dark"]   .stage { color: #fff; }
+.section[data-tone="light"]  .stage { color: #0a0a0a; }
+
+/* --- logo (cover + outro-return-link) ------------------------------------ */
+.logo-link { display: block; width: 100%; height: 100%; cursor: pointer; }
+.logo-link img { width: 100%; height: 100%; object-fit: contain; object-position: left center; }
+/* outro reuses the cover's exact logo file (same asset = guaranteed
+   identical proportions/weight) and recolors it white via filter, rather
+   than a second, subtly different PNG export. */
+.logo-recolor-white { filter: brightness(0) invert(1); }
+
+/* --- generic card used in build-up (genre/mood/energy/direction) -------- */
+.info-card__img { width: 100%; height: 100%; object-fit: cover; }
+.info-card__text { display: flex; flex-direction: column; gap: 55px; }
+
+/* --- drop: moodlist tile -------------------------------------------------- */
+.mood-card { display: block; }
+.mood-card__img { width: 100%; height: 100%; object-fit: cover; }
+.mood-card__cap {
+  position: absolute;
+  left: 0; right: 0; bottom: -96px;
+  font-family: var(--font-body);
+  font-size: 36px;
+  line-height: 44px;
+  letter-spacing: 0.4px;
+  text-align: center;
+}
+
+/* --- release: social tile ------------------------------------------------- */
+.social-tile { display: block; width: 100%; height: 100%; }
+.social-tile img { width: 100%; height: 100%; object-fit: cover; }
+.social-tile:hover img { filter: brightness(1.06); }
+
+/* --- break: photo grid item ------------------------------------------------ */
+.grid-photo { width: 100%; height: 100%; object-fit: cover; }
+
+/* --- peak: soundcloud pill ------------------------------------------------- */
+.soundcloud-pill { display: flex; align-items: center; gap: 24px; }
+.soundcloud-pill img { width: 100%; height: 100%; object-fit: contain; }
+
+/* --- outro: email line ----------------------------------------------------- */
+.email-link {
+  display: block;
+  font-family: var(--font-body);
+  letter-spacing: 0.6px;
+  text-align: center;
+  color: #ece4fb;
+}
+.stage-mode .email-link { font-size: 56px; }
+.email-link:hover { opacity: 0.85; }
+
+/* --- outro: dj kitas sticker aside ------------------------------------------ */
+.aside-sticker { display: flex; align-items: center; justify-content: center; }
+.aside-sticker img { width: 100%; height: 100%; object-fit: contain; }
+
+/* --- fade/scale-in choreography for content within an active stage -------- */
+.stage-mode .section.is-active .stage .el,
+.stage-mode .section.is-active .stage .h-kicker,
+.stage-mode .section.is-active .stage .h-hero-link {
+  animation: rise-in 900ms cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* --- build-up / release: centred dotted list under a card ---------------- */
+.card-list {
+  font-family: var(--font-body);
+  text-align: center;
+  text-transform: lowercase;
+  letter-spacing: 0.4px;
+}
+.stage-mode .card-list { font-size: var(--fit, 54px); line-height: 90px; }
+
+/* --- drop: 3-line lead-in paragraph ------------------------------------- */
+.intro-lines { font-family: var(--font-body); letter-spacing: 0.4px; }
+.intro-lines p { margin: 0; }
+.intro-lines .is-emph { font-style: italic; }
+.stage-mode .intro-lines { font-size: 56px; line-height: 90px; }
+
+/* --- drop: caption under each archive cover ------------------------------ */
+.mood-cap {
+  font-family: var(--font-body);
+  text-align: center;
+  margin: 0;
+  letter-spacing: 0;
+}
+.stage-mode .mood-cap { font-size: 35px; line-height: 44px; }
+
+/* --- drop: hairline connecting the poster to the playlist thumbnail ------ */
+/* the screenshot sits later in the DOM and would paint over the
+   line's far end, so lift the connector above it */
+.connector { overflow: visible; pointer-events: none; z-index: 5; }
+.connector line { stroke: currentColor; stroke-width: 3; opacity: 0.85; }
+
+/* --- break: bulleted lists ----------------------------------------------- */
+.bullet-list {
+  font-family: var(--font-body);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  letter-spacing: 0.4px;
+}
+.bullet-list li { position: relative; margin: 0; }
+.bullet-list li::before { content: "\2022"; position: absolute; left: 0; }
+.stage-mode .bullet-list { font-size: 62px; line-height: 90px; }
+.stage-mode .bullet-list li { padding-left: 56px; }
+.stage-mode .bullet-list.is-justify li { text-align: justify; }
+
+/* --- peak: "find more mixes here" + SoundCloud mark, vertically centred -- */
+/* peak: "find more mixes here" label + SoundCloud mark, each placed by its
+   own exact Figma coords (label x4891/y3070, icon x5517/y2978). The label box
+   is 596x80 with the text right-aligned and vertically centred in it. */
+.soundcloud-label {
+  font-family: var(--font-title);
+  font-weight: 400;
+  letter-spacing: 2.4px;
+  line-height: 1;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.stage-mode .soundcloud-label { font-size: 62px; }
+.stage-mode .el .soundcloud-icon { width: 222px; height: 222px; object-fit: contain; }
+
+/* --- outro: cutout figure + speech bubble -------------------------------- */
+.stage-mode .el .outro-cutout { width: 100%; height: 100%; object-fit: contain; object-position: bottom center; }
+.speech-bubble { position: absolute; }
+.stage-mode .el.speech-bubble img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.speech-bubble span {
+  position: absolute;
+  left: 6%; right: 8%; top: 20%;
+  font-family: var(--font-body);
+  font-weight: 400;
+  text-align: center;
+  color: #111;
+  line-height: 1.16;
+}
+.stage-mode .speech-bubble span { font-size: 56px; }
