@@ -1,0 +1,151 @@
+/* ==========================================================================
+   Base / reset / canvas-scaling architecture
+   Design source: Figma file, 6000x3375 px per full-screen section.
+   Desktop/tablet: the whole 6000x3375 "stage" is uniformly scaled to fit
+   the viewport (contain-fit) so every Figma value below is used verbatim —
+   only a single, global scale factor is ever applied.
+   ========================================================================== */
+
+:root {
+  --canvas-w: 6000;
+  --canvas-h: 3375;
+  --scale: 0.16;                 /* set by JS on load/resize */
+  --blue-glow: 11, 15, 244;      /* rgb(11,15,244) — the brief's accent blue */
+  --letterbox: #050308;
+
+  --font-display: 'Glitch Inside', 'Arial Narrow', sans-serif;
+  --font-title:   'Bebas Neue', 'Arial Narrow', sans-serif;
+  --font-body:    'Hemi Head', 'Helvetica Neue', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--letterbox);
+  color: #fff;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: none; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+/* ---- Scroll / snap container -------------------------------------------- */
+
+.journey {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+.journey::-webkit-scrollbar { display: none; }
+.journey { scrollbar-width: none; }
+
+/* ---- Desktop/tablet canvas mode ------------------------------------------ */
+
+.stage-mode .section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--letterbox);
+}
+
+/* Full-bleed background layer: the section's own background image is blown
+   up to cover the whole viewport (no black letterbox bars), while the
+   scaled 16:9 stage that holds the real content sits centred on top of it.
+   Each section sets --bg to its background image via an inline style. */
+.stage-mode .section[style*="--bg"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--bg);
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+/* the in-stage <img> bg is redundant now the full-bleed layer covers the
+   viewport; hiding it also drops the wrong-path duplicate load */
+.stage-mode .stage__bg { display: none; }
+
+.stage-mode .stage {
+  position: relative;
+  z-index: 1;
+  width: calc(var(--canvas-w) * 1px);
+  height: calc(var(--canvas-h) * 1px);
+  flex: none;
+  transform: scale(var(--scale));
+  opacity: 0;
+  transition: opacity 900ms ease;
+  will-change: opacity;
+}
+.stage-mode .section.is-active .stage { opacity: 1; }
+
+/* The in-stage <img> background is now redundant on desktop (the ::before
+   full-bleed layer shows through the 16:9 frame edges anyway), but keep it
+   so the content frame still carries the exact same texture within 16:9. */
+.stage-mode .stage__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Generic absolutely-positioned element inside a stage: position/size come
+   from inline custom properties (--l/--t/--w/--h) set per element in HTML,
+   so the exact Figma numbers live once, in markup, not duplicated in CSS. */
+.stage-mode .el {
+  position: absolute;
+  /* headings/paragraphs/lists carry browser default margins that would
+     offset them from their measured canvas coordinates — neutralise them. */
+  margin: 0;
+  left: calc(var(--l) * 1px);
+  top: calc(var(--t) * 1px);
+  width: calc(var(--w) * 1px);
+  height: calc(var(--h) * 1px);
+}
+.stage-mode .el img, .stage-mode .el picture { width: 100%; height: 100%; object-fit: cover; }
+
+/* ---- Fixed, persistent nav overlay (see nav.css) sits above everything -- */
+.nav-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.nav-canvas {
+  position: relative;
+  width: calc(var(--canvas-w) * 1px);
+  height: calc(var(--canvas-h) * 1px);
+  flex: none;
+  transform: scale(var(--scale));
+}
+
+/* Cover logo has no nav highlight; hide nav-frame entirely there via JS class */
+body.on-cover .wave-nav,
+body.on-outro-hero .wave-nav { opacity: 1; }
+
+/* Skip-link / accessibility */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
