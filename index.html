@@ -14,8 +14,13 @@
 <link rel="stylesheet" href="css/mobile.css">
 </head>
 <body class="stage-mode">
+<script>(function(){var b=document.body;if(matchMedia("(orientation: portrait), (max-height: 599px)").matches){b.className="m-mode "+(matchMedia("(orientation: landscape) and (max-height: 599px)").matches?"m-scroll":"m-paged");}})();</script>
 
-<nav class="mobile-nav" id="mobileNav" aria-label="Section navigation"></nav>
+<div class="m-nav-frame">
+  <div class="m-nav-canvas">
+    <nav class="m-nav" id="mNav" aria-label="Section navigation"></nav>
+  </div>
+</div>
 
 <div class="nav-frame stage-mode-only">
   <div class="nav-canvas">
@@ -28,25 +33,27 @@
   <!-- ============================= 1. COVER ============================ -->
   <section class="section" data-role="cover" data-tone="dark" style="--bg:url(../assets/img/cover.jpg)">
     <div class="stage">
-      <img class="stage__bg" src="assets/img/cover.jpg" alt="">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="stage__bg" src="assets/img/cover.jpg" alt=""></picture>
       <div class="el logo-link" style="--l:150;--t:110;--w:1350;--h:282">
-        <img src="assets/img/logo.png" alt="Lisa FLY">
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/logo.png" alt="Lisa FLY"></picture>
       </div>
     </div>
+
+    <div class="m-cover-logo"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/logo.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Lisa FLY"></picture></div>
   </section>
 
   <!-- ============================= 2. INTRO ============================ -->
   <section class="section intro-stack" data-section="intro" data-tone="dark" style="--bg:url(../assets/img/bg-2-4-6.jpg)">
     <div class="intro-frame stage">
-      <img class="stage__bg" src="assets/img/bg-2-4-6.jpg" alt="">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="stage__bg" src="assets/img/bg-2-4-6.jpg" alt=""></picture>
       <h1 class="el pel h-kicker" style="--l:2.5;--t:6.175;--w:24.017;--h:4.931">artist profile</h1>
 
       <div class="m-grid-2">
         <div class="el pel" style="--l:0;--t:26.655;--w:18.35;--h:73.345">
-          <img src="assets/img/intro-1.jpg" alt="Lisa FLY portrait">
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/intro-1.jpg" alt="Lisa FLY portrait"></picture>
         </div>
         <div class="el pel" style="--l:18.333;--t:26.655;--w:18.333;--h:73.345">
-          <img src="assets/img/intro-2.jpg" alt="Lisa FLY portrait">
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/intro-2.jpg" alt="Lisa FLY portrait"></picture>
         </div>
       </div>
       <div class="el pel bio-copy" style="--l:38.333;--t:28.299;--w:41.667;--h:68.903">
@@ -56,32 +63,40 @@
         <p>Whether it&rsquo;s a beach club, private event, festival, bar or underground dancefloor, I want people to feel connected to the present moment, enjoy their experience, and leave feeling like the music made it even better.</p>
       </div>
       <div class="el pel" style="--l:81.667;--t:26.655;--w:18.333;--h:73.345">
-        <img src="assets/img/intro-3.jpg" alt="Lisa FLY behind the decks">
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/intro-3.jpg" alt="Lisa FLY behind the decks"></picture>
       </div>
     </div>
     <div class="intro-fill stage">
-      <img src="assets/img/intro-4.jpg" alt="Lisa FLY playing a set">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/intro-4.jpg" alt="Lisa FLY playing a set"></picture>
     </div>
+
+    <div class="m-stage">
+      <h2 class="m-el m-kicker" style="--l:54;--t:253;--w:800;--h:111">artist profile</h2>
+      <div class="m-el" style="--l:56;--t:392;--w:560;--h:840"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/intro-1.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Lisa FLY portrait"></picture></div>
+      <div class="m-el" style="--l:672;--t:392;--w:560;--h:840"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/intro-2.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Lisa FLY behind the decks"></picture></div>
+      <div class="m-el m-body m-bio" style="--l:56;--t:1285;--w:1176;--h:1210"><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hi, I&rsquo;m Lisa FLY — a Ukrainian DJ from Donbas, based in Bali for over 7 years. I&rsquo;ve been digging for new music for as long as I can remember, and I adore sharing what excites me and seeing it spark something in other people. In my sets, I prefer to follow the vibe and the groove, guided by musical curiosity rather than strict genre boundaries. My selection is wide-ranging, but house is at the heart of what I play — from deep, jazzy, disco and Italo to Detroit, acid, progressive and tech house, alongside breakbeat, electro, techno and textural leftfield electronic sounds. I&rsquo;m drawn to tracks with character, story, emotion and sometimes a little bit of surprise.</p><p>&nbsp;&nbsp;&nbsp;&nbsp;For me, DJing is about adding to the energy of a moment — amplifying a good one, shifting it when needed, and letting the music take people somewhere a little deeper. That&rsquo;s why my sets are intuitive, shaped by the context, the atmosphere and the people — warm, jazzy and chill for a golden-hour sunset, playful and groovy for a daytime crowd, or more driving and trippy when the night calls for it.</p><p>Whether it&rsquo;s a beach club, private event, festival, bar or underground dancefloor, I want people to feel connected to the present moment, enjoy their experience, and leave feeling like the music made it even better.</p></div>
+    </div>
+    <div class="m-intro-fill"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/intro-3-wide.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Lisa FLY playing a set"></picture></div>
   </section>
 
   <!-- ============================ 3. BUILD-UP =========================== -->
   <section class="section" data-section="build" data-tone="light" style="--bg:url(../assets/img/bg-3-5-7.jpg)">
     <div class="stage">
-      <img class="stage__bg" src="assets/img/bg-3-5-7.jpg" alt="">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="stage__bg" src="assets/img/bg-3-5-7.jpg" alt=""></picture>
       <h1 class="el h-kicker" style="--l:151;--t:110;--w:1600;--h:180">sound profile</h1>
 
       <div class="m-grid-2">
         <div class="el" style="--l:201;--t:850;--w:1248;--h:1144">
-          <img class="info-card__img" src="assets/img/build-genre.jpg" alt="Genre">
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="info-card__img" src="assets/img/build-genre.jpg" alt="Genre"></picture>
         </div>
         <div class="el" style="--l:1651;--t:850;--w:1248;--h:1144">
-          <img class="info-card__img" src="assets/img/build-mood.jpg" alt="Mood">
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="info-card__img" src="assets/img/build-mood.jpg" alt="Mood"></picture>
         </div>
         <div class="el" style="--l:3102;--t:850;--w:1248;--h:1144">
-          <img class="info-card__img" src="assets/img/build-energy.jpg" alt="Energy">
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="info-card__img" src="assets/img/build-energy.jpg" alt="Energy"></picture>
         </div>
         <div class="el" style="--l:4551;--t:850;--w:1248;--h:1144">
-          <img class="info-card__img" src="assets/img/build-direction.jpg" alt="Direction">
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="info-card__img" src="assets/img/build-direction.jpg" alt="Direction"></picture>
         </div>
       </div>
 
@@ -97,12 +112,28 @@
       <h2 class="el h-title" style="--l:4551;--t:2071;--w:1238;--h:89;--fit:99px">direction</h2>
       <p class="el card-list" style="--l:4551;--t:2215;--w:1248;--h:300">• dynamic progression • shifting moods •<br>• genre fluidity • tension and release •<br>• balancing warmth and edge •</p>
     </div>
+
+    <div class="m-stage">
+      <h2 class="m-el m-kicker" style="--l:54;--t:253;--w:800;--h:111">sound profile</h2>
+      <div class="m-el" style="--l:56;--t:420;--w:588;--h:532"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/build-genre.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Genre"></picture></div>
+      <div class="m-el" style="--l:644;--t:1008;--w:588;--h:532"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/build-mood.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Mood"></picture></div>
+      <div class="m-el" style="--l:56;--t:1596;--w:588;--h:532"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/build-energy.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Energy"></picture></div>
+      <div class="m-el" style="--l:644;--t:2184;--w:588;--h:532"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/build-direction.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Direction"></picture></div>
+      <h3 class="m-el m-title" style="--l:700;--t:451;--w:400;--h:111">genre</h3>
+      <p class="m-el m-list" style="--l:700;--t:577;--w:560;--h:350">• house: deep, jazzy, disco, italo,<br>detroit, jackin&rsquo;, tech, progressive<br>• acid<br>• breaks<br>• leftfield electronic<br>• electro<br>• techno</p>
+      <h3 class="m-el m-title is-right" style="--l:188;--t:1039;--w:400;--h:111">mood</h3>
+      <p class="m-el m-list is-right" style="--l:188;--t:1165;--w:400;--h:250">dreamy • trippy •<br>reflective • relaxed •<br>emotional • soulful •<br>melancholic • dark •<br>euphoric • bright •</p>
+      <h3 class="m-el m-title" style="--l:700;--t:1627;--w:400;--h:111">energy</h3>
+      <p class="m-el m-list" style="--l:700;--t:1753;--w:400;--h:250">• mellow • laid-back<br>• driving • electric<br>• hypnotic • immersive<br>• groovy • playful<br>• uplifting • vibrant</p>
+      <h3 class="m-el m-title is-right" style="--l:188;--t:2215;--w:400;--h:111">direction</h3>
+      <p class="m-el m-list is-right" style="--l:88;--t:2341;--w:500;--h:250">dynamic progression •<br>shifting moods •<br>genre fluidity •<br>tension and release •<br>balancing warmth and edge •</p>
+    </div>
   </section>
 
   <!-- ============================== 4. DROP ============================= -->
   <section class="section" data-section="drop" data-tone="dark" style="--bg:url(../assets/img/bg-2-4-6.jpg)">
     <div class="stage">
-      <img class="stage__bg" src="assets/img/bg-2-4-6.jpg" alt="">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="stage__bg" src="assets/img/bg-2-4-6.jpg" alt=""></picture>
       <h1 class="el h-kicker" style="--l:147;--t:139;--w:890;--h:111">curation</h1>
 
       <div class="el intro-lines" style="--l:197;--t:582;--w:5599;--h:257">
@@ -119,45 +150,69 @@
       </svg>
 
       <a class="el" id="dropPoster" style="--l:200;--t:1850;--w:950;--h:950" href="https://open.spotify.com/playlist/2YyvYJoXVaApUPATBLjXjR?si=K9QavBGUS7KBBTCQlrMoMA" target="_blank" rel="noopener">
-        <img src="assets/img/drop-fuck-nudes.png" alt="Playlist cover artwork">
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/drop-fuck-nudes.png" alt="Playlist cover artwork"></picture>
       </a>
       <a class="el" id="dropShot" style="--l:1550;--t:1227;--w:1281;--h:1774" href="https://open.spotify.com/playlist/2YyvYJoXVaApUPATBLjXjR?si=K9QavBGUS7KBBTCQlrMoMA" target="_blank" rel="noopener">
-        <img src="assets/img/drop-current-mood.png" alt="current mood playlist">
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/drop-current-mood.png" alt="current mood playlist"></picture>
       </a>
 
       <h2 class="el h-title is-fitted" style="--l:3300;--t:1045;--w:700;--h:111;text-align:left;--fit:95px">from the archive</h2>
       <p class="el body-copy" style="--l:3300;--t:1211;--w:2501;--h:166">some of my previous playlist projects from 2024, shaped around different moods, concepts and settings.</p>
 
       <a class="el" style="--l:3300;--t:1502;--w:653;--h:653" href="https://open.spotify.com/playlist/2apVkG5iEs8xZBS2NIouEx?si=0925cfc886bc4a2f&pt=ad90f868b4ce521fce2b14065d471728" target="_blank" rel="noopener">
-        <img src="assets/img/drop-moodlist-18.jpg" alt="moodlist 18"></a>
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/drop-moodlist-18.jpg" alt="moodlist 18"></picture></a>
       <p class="el mood-cap" style="--l:3300;--t:2187;--w:653;--h:88">Breaks, UKG, House, Acid, Electro<br>dark, hypnotic, mysterious, futuristic</p>
 
       <a class="el" style="--l:4224;--t:1502;--w:652;--h:652" href="https://open.spotify.com/playlist/1aMkbiq6FFKAAlLdNpCcBs?si=1b09678835d84df9&pt=b444f2f1467a40ec4b2b67ba1d49c53b" target="_blank" rel="noopener">
-        <img src="assets/img/drop-moodlist-19.jpg" alt="moodlist 19"></a>
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/drop-moodlist-19.jpg" alt="moodlist 19"></picture></a>
       <p class="el mood-cap" style="--l:4224;--t:2186;--w:652;--h:88">Downtempo, Lo-Fi House<br>laid-back, mellow, warm, cozy</p>
 
       <a class="el" style="--l:5148;--t:1502;--w:652;--h:652" href="https://open.spotify.com/playlist/2DiC0dN2JwPnYQRosA5Myj?si=98a8c3f2c3364458&pt=8bd12d2c9fd107efef6ec55710ae02c4" target="_blank" rel="noopener">
-        <img src="assets/img/drop-moodlist-20.jpg" alt="moodlist 20"></a>
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/drop-moodlist-20.jpg" alt="moodlist 20"></picture></a>
       <p class="el mood-cap" style="--l:5148;--t:2186;--w:652;--h:88">UKG, Drum&rsquo;n&rsquo;Base, Jungle<br>gritty, aggressive, hard-hitting</p>
 
       <a class="el" style="--l:3300;--t:2351;--w:652;--h:652" href="https://open.spotify.com/playlist/1CXQZXoeMULXHjyNnSBsNK?si=b2de7416eae340d7&pt=d5deb60ef43c9b3c0e24980c8695b659" target="_blank" rel="noopener">
-        <img src="assets/img/drop-moodlist-21.jpg" alt="moodlist 21"></a>
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/drop-moodlist-21.jpg" alt="moodlist 21"></picture></a>
       <p class="el mood-cap" style="--l:3300;--t:3035;--w:653;--h:88">Jazzy House, Deep House<br>chill, nostalgic, sentimental, hopeful</p>
 
       <a class="el" style="--l:4224;--t:2351;--w:652;--h:652" href="https://open.spotify.com/playlist/0mpEPrdChDEgdIDqFhNM1h?si=8ce72b2a50df459c&pt=0981b927326b4c7fdbbce1276bcd93c6" target="_blank" rel="noopener">
-        <img src="assets/img/drop-moodlist-22.jpg" alt="moodlist 22"></a>
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/drop-moodlist-22.jpg" alt="moodlist 22"></picture></a>
       <p class="el mood-cap" style="--l:4224;--t:3036;--w:652;--h:88">Ambient, Leftfield House, IDM<br>trippy, surreal, hazy, dreamy</p>
 
       <a class="el" style="--l:5148;--t:2351;--w:652;--h:652" href="https://open.spotify.com/playlist/7GnVAYoFmqSgN0LaiRruHo?si=616dee63aa7f4f9e&pt=81e25904560337d63af88bf21fbfdf16" target="_blank" rel="noopener">
-        <img src="assets/img/drop-moodlist-23.jpg" alt="moodlist 23"></a>
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/drop-moodlist-23.jpg" alt="moodlist 23"></picture></a>
       <p class="el mood-cap" style="--l:5148;--t:3035;--w:652;--h:88">Deep House, Disco House, Breakbeat<br>groovy, sexy, warm, soulful</p>
+    </div>
+
+    <div class="m-stage">
+      <h2 class="m-el m-kicker" style="--l:54;--t:253;--w:800;--h:111">curation</h2>
+      <div class="m-el m-body is-lower" style="--l:59;--t:392;--w:1173;--h:213"><p>playlists are extension of my taste and listening habits - whether it&rsquo;s simply what I&rsquo;m listening to myself, or a playlist that built around a specific concept and atmosphere.</p><p>for a space or project, that aiming to be more intentional, i can curate music to match the feeling, the character and the energy you&rsquo;re looking for.</p></div>
+      <p class="m-el m-emph" style="--l:56;--t:617;--w:800;--h:44">YOUR VISION. YOUR VIBE. MY SELECTION.</p>
+      <h3 class="m-el m-title" style="--l:59;--t:700;--w:600;--h:111">current wave</h3>
+      <p class="m-el m-body is-lower" style="--l:59;--t:814;--w:1173;--h:87">no concept, no boundaries, no structure — just my taste. always in rotation, constantly changing with mood, moments, and new finds.</p>
+      <a class="m-el m-poster" style="--l:58;--t:982;--w:386;--h:386" href="https://open.spotify.com/playlist/2YyvYJoXVaApUPATBLjXjR?si=K9QavBGUS7KBBTCQlrMoMA" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/drop-poster.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Playlist cover artwork"></picture></a>
+      <a class="m-el" style="--l:560;--t:952;--w:672;--h:504" href="https://open.spotify.com/playlist/2YyvYJoXVaApUPATBLjXjR?si=K9QavBGUS7KBBTCQlrMoMA" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/drop-shot.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="current mood playlist"></picture></a>
+      <h3 class="m-el m-title" style="--l:54;--t:1463;--w:600;--h:111">from the archive</h3>
+      <p class="m-el m-body" style="--l:59;--t:1577;--w:1173;--h:84">some of my previous playlist projects from 2024, shaped around different moods, concepts and settings.</p>
+      <a class="m-el" style="--l:28;--t:1708;--w:392;--h:392" href="https://open.spotify.com/playlist/2apVkG5iEs8xZBS2NIouEx?si=0925cfc886bc4a2f&pt=ad90f868b4ce521fce2b14065d471728" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/moodlist-18.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="moodlist 18"></picture></a>
+      <a class="m-el" style="--l:448;--t:1708;--w:392;--h:392" href="https://open.spotify.com/playlist/1aMkbiq6FFKAAlLdNpCcBs?si=1b09678835d84df9&pt=b444f2f1467a40ec4b2b67ba1d49c53b" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/moodlist-19.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="moodlist 19"></picture></a>
+      <a class="m-el" style="--l:868;--t:1708;--w:392;--h:392" href="https://open.spotify.com/playlist/2DiC0dN2JwPnYQRosA5Myj?si=98a8c3f2c3364458&pt=8bd12d2c9fd107efef6ec55710ae02c4" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/moodlist-20.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="moodlist 20"></picture></a>
+      <a class="m-el" style="--l:28;--t:2240;--w:392;--h:392" href="https://open.spotify.com/playlist/1CXQZXoeMULXHjyNnSBsNK?si=b2de7416eae340d7&pt=d5deb60ef43c9b3c0e24980c8695b659" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/moodlist-21.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="moodlist 21"></picture></a>
+      <a class="m-el" style="--l:448;--t:2240;--w:392;--h:393" href="https://open.spotify.com/playlist/0mpEPrdChDEgdIDqFhNM1h?si=8ce72b2a50df459c&pt=0981b927326b4c7fdbbce1276bcd93c6" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/moodlist-22.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="moodlist 22"></picture></a>
+      <a class="m-el" style="--l:868;--t:2241;--w:392;--h:392" href="https://open.spotify.com/playlist/7GnVAYoFmqSgN0LaiRruHo?si=616dee63aa7f4f9e&pt=81e25904560337d63af88bf21fbfdf16" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/moodlist-23.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="moodlist 23"></picture></a>
+      <p class="m-el m-cap" style="--l:-28.5;--t:2124;--w:500;--h:66">Breaks, UKG, House, Acid, Electro<br>dark, hypnotic, mysterious, futuristic</p>
+      <p class="m-el m-cap" style="--l:394.5;--t:2124;--w:500;--h:66">Downtempo, Lo-Fi House<br>laid-back, mellow, warm, cozy</p>
+      <p class="m-el m-cap" style="--l:814;--t:2124;--w:500;--h:66">UKG, Drum&rsquo;n&rsquo;Base, Jungle<br>gritty, aggressive, hard-hitting</p>
+      <p class="m-el m-cap" style="--l:-26;--t:2656;--w:500;--h:66">Jazzy House, Deep House<br>chill, nostalgic, sentimental, hopeful</p>
+      <p class="m-el m-cap" style="--l:394;--t:2657;--w:500;--h:66">Ambient, Leftfield House, IDM<br>trippy, surreal, hazy, dreamy</p>
+      <p class="m-el m-cap" style="--l:814;--t:2657;--w:500;--h:66">Deep House, Disco House, Breakbeat<br>groovy, sexy, warm, soulful</p>
     </div>
   </section>
 
   <!-- ============================= 5. BREAK ============================= -->
   <section class="section" data-section="break" data-tone="light" style="--bg:url(../assets/img/bg-3-5-7.jpg)">
     <div class="stage">
-      <img class="stage__bg" src="assets/img/bg-3-5-7.jpg" alt="">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="stage__bg" src="assets/img/bg-3-5-7.jpg" alt=""></picture>
       <h1 class="el h-kicker" style="--l:148;--t:141;--w:1108;--h:111">experience</h1>
 
       <h2 class="el h-title is-fitted" style="--l:256;--t:601;--w:343;--h:101;text-align:left;--fit:102px">formats</h2>
@@ -177,49 +232,74 @@
       </ul>
 
       <div class="m-grid-2">
-        <div class="el" style="--l:1747;--t:601;--w:732;--h:1299"><img class="grid-photo" src="assets/img/break-6.jpg" alt=""></div>
-        <div class="el" style="--l:2577;--t:601;--w:732;--h:1299"><img class="grid-photo" src="assets/img/break-7.jpg" alt=""></div>
-        <div class="el" style="--l:3407;--t:601;--w:732;--h:1299"><img class="grid-photo" src="assets/img/break-5.jpg" alt=""></div>
-        <div class="el" style="--l:4237;--t:601;--w:732;--h:1299"><img class="grid-photo" src="assets/img/break-2.jpg" alt=""></div>
-        <div class="el" style="--l:5067;--t:601;--w:732;--h:1299"><img class="grid-photo" src="assets/img/break-4.jpg" alt=""></div>
+        <div class="el" style="--l:1747;--t:601;--w:732;--h:1299"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/break-6.jpg" alt=""></picture></div>
+        <div class="el" style="--l:2577;--t:601;--w:732;--h:1299"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/break-7.jpg" alt=""></picture></div>
+        <div class="el" style="--l:3407;--t:601;--w:732;--h:1299"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/break-5.jpg" alt=""></picture></div>
+        <div class="el" style="--l:4237;--t:601;--w:732;--h:1299"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/break-2.jpg" alt=""></picture></div>
+        <div class="el" style="--l:5067;--t:601;--w:732;--h:1299"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/break-4.jpg" alt=""></picture></div>
 
-        <div class="el" style="--l:200;--t:2051;--w:1750;--h:1050"><img class="grid-photo" src="assets/img/break-1.jpg" alt=""></div>
-        <div class="el" style="--l:2049;--t:2051;--w:901;--h:1050"><img class="grid-photo" src="assets/img/break-9.jpg" alt=""></div>
-        <div class="el" style="--l:3050;--t:2051;--w:901;--h:1050"><img class="grid-photo" src="assets/img/break-8.jpg" alt=""></div>
-        <div class="el" style="--l:4050;--t:2052;--w:1750;--h:1050"><img class="grid-photo" src="assets/img/break-3.jpg" alt=""></div>
+        <div class="el" style="--l:200;--t:2051;--w:1750;--h:1050"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/break-1.jpg" alt=""></picture></div>
+        <div class="el" style="--l:2049;--t:2051;--w:901;--h:1050"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/break-9.jpg" alt=""></picture></div>
+        <div class="el" style="--l:3050;--t:2051;--w:901;--h:1050"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/break-8.jpg" alt=""></picture></div>
+        <div class="el" style="--l:4050;--t:2052;--w:1750;--h:1050"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/break-3.jpg" alt=""></picture></div>
       </div>
+    </div>
+
+    <div class="m-stage">
+      <h2 class="m-el m-kicker" style="--l:55;--t:251;--w:800;--h:111">experience</h2>
+      <h3 class="m-el m-title" style="--l:55;--t:371;--w:600;--h:111">formats</h3>
+      <ul class="m-el m-bullets" style="--l:38;--t:489;--w:640;--h:250"><li>clubs, bars</li><li>beach club, caf&eacute;</li><li>open air</li><li>private events</li><li>community and market gatherings</li></ul>
+      <ul class="m-el m-bullets" style="--l:732;--t:489;--w:400;--h:250"><li>sunrise</li><li>daytime</li><li>sunset</li><li>evening, late night</li><li>after hours</li></ul>
+      <h3 class="m-el m-title" style="--l:55;--t:789;--w:600;--h:111">collaborations</h3>
+      <ul class="m-el m-bullets" style="--l:38;--t:907;--w:1100;--h:150"><li>Night Spacer — open-air underground gathering in nature</li><li>Freq Kartel — cocktail-style and bar settings</li><li>Pulsar — energetic, groove-driven club set</li></ul>
+      <div class="m-el" style="--l:56;--t:1138;--w:342;--h:606"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/break-6.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""></picture></div>
+      <div class="m-el" style="--l:473;--t:1138;--w:342;--h:606"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/break-7.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""></picture></div>
+      <div class="m-el" style="--l:890;--t:1138;--w:342;--h:606"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/break-5.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""></picture></div>
+      <div class="m-el" style="--l:140;--t:1810;--w:433;--h:504"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/break-9.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""></picture></div>
+      <div class="m-el" style="--l:715;--t:1810;--w:433;--h:504"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/break-8.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""></picture></div>
+      <div class="m-el" style="--l:57;--t:2380;--w:559;--h:336"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/break-1.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""></picture></div>
+      <div class="m-el" style="--l:673;--t:2380;--w:559;--h:336"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/break-3.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""></picture></div>
     </div>
   </section>
 
   <!-- ============================== 6. PEAK ============================= -->
   <section class="section" data-section="peak" data-tone="dark" style="--bg:url(../assets/img/bg-2-4-6.jpg)">
     <div class="stage">
-      <img class="stage__bg" src="assets/img/bg-2-4-6.jpg" alt="">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="stage__bg" src="assets/img/bg-2-4-6.jpg" alt=""></picture>
       <h1 class="el h-kicker" style="--l:144;--t:138;--w:693;--h:111">dj sets</h1>
 
       <div class="m-grid-1">
         <a class="el" style="--l:250;--t:600;--w:2222;--h:1250" href="https://youtu.be/Ua82ITPydOE?si=XW3JwDfAsA-G27ak" target="_blank" rel="noopener">
-          <img class="grid-photo" src="assets/img/peak-1-adhd.jpg" alt="ADHD: Harmonic Chaos set">
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/peak-1-adhd.jpg" alt="ADHD: Harmonic Chaos set"></picture>
         </a>
         <a class="el" style="--l:3517;--t:600;--w:2222;--h:1250" href="https://youtu.be/vp8KqbGRrAE?si=Du4qErTpPdDEYg1d" target="_blank" rel="noopener">
-          <img class="grid-photo" src="assets/img/peak-2-rave.jpg" alt="Aisle Rave set">
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/peak-2-rave.jpg" alt="Aisle Rave set"></picture>
         </a>
         <a class="el" style="--l:1890;--t:1950;--w:2222;--h:1250" href="https://youtu.be/0hK3ODLy7VU?si=Lf5tHZ5Hk4QGF0iR" target="_blank" rel="noopener">
-          <img class="grid-photo" src="assets/img/peak-3-breaks.jpg" alt="Breaks Session set">
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="grid-photo" src="assets/img/peak-3-breaks.jpg" alt="Breaks Session set"></picture>
         </a>
       </div>
 
       <a class="el soundcloud-label" style="--l:4891;--t:3070;--w:596;--h:80" href="https://soundcloud.com/lisa_fly" target="_blank" rel="noopener">find more mixes here</a>
       <a class="el" style="--l:5517;--t:2978;--w:222;--h:222" href="https://soundcloud.com/lisa_fly" target="_blank" rel="noopener" aria-label="SoundCloud">
-        <img class="soundcloud-icon" src="assets/img/peak-soundcloud.png" alt="SoundCloud">
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="soundcloud-icon" src="assets/img/peak-soundcloud.png" alt="SoundCloud"></picture>
       </a>
+    </div>
+
+    <div class="m-stage">
+      <h2 class="m-el m-kicker" style="--l:53;--t:253;--w:800;--h:111">dj sets</h2>
+      <a class="m-el" style="--l:56;--t:392;--w:1176;--h:662" href="https://youtu.be/Ua82ITPydOE?si=XW3JwDfAsA-G27ak" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/peak-1.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="ADHD: Harmonic Chaos set"></picture></a>
+      <a class="m-el" style="--l:56;--t:1120;--w:1176;--h:662" href="https://youtu.be/vp8KqbGRrAE?si=Du4qErTpPdDEYg1d" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/peak-2.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Aisle Rave set"></picture></a>
+      <a class="m-el" style="--l:56;--t:1848;--w:1176;--h:662" href="https://youtu.be/0hK3ODLy7VU?si=Lf5tHZ5Hk4QGF0iR" target="_blank" rel="noopener"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/peak-3.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Breaks Session set"></picture></a>
+      <a class="m-el m-more" style="--l:271;--t:2603;--w:500;--h:111" href="https://soundcloud.com/lisa_fly" target="_blank" rel="noopener">find more mixes here</a>
+      <a class="m-el m-sc-icon" style="--l:800;--t:2577;--w:139;--h:139" href="https://soundcloud.com/lisa_fly" target="_blank" rel="noopener" aria-label="SoundCloud"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/soundcloud.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="SoundCloud"></picture></a>
     </div>
   </section>
 
   <!-- ============================= 7. RELEASE =========================== -->
   <section class="section" data-section="release" data-tone="light" style="--bg:url(../assets/img/bg-3-5-7.jpg)">
     <div class="stage">
-      <img class="stage__bg" src="assets/img/bg-3-5-7.jpg" alt="">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="stage__bg" src="assets/img/bg-3-5-7.jpg" alt=""></picture>
       <h1 class="el h-kicker" style="--l:147;--t:110;--w:1600;--h:180">links</h1>
 
       <h2 class="el h-title" style="--l:2376;--t:1776;--w:1248;--h:100;--fit:99px">DIG DEEPER</h2>
@@ -227,24 +307,36 @@
 
       <div class="m-grid-2">
         <a class="el social-tile" style="--l:250;--t:600;--w:1923;--h:1182" href="https://soundcloud.com/lisa_fly" target="_blank" rel="noopener" aria-label="SoundCloud">
-          <img src="assets/img/release-soundcloud.png" alt="SoundCloud"></a>
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/release-soundcloud.png" alt="SoundCloud"></picture></a>
         <a class="el social-tile" style="--l:3828;--t:600;--w:1923;--h:1182" href="https://www.youtube.com/@lisa69fly" target="_blank" rel="noopener" aria-label="YouTube">
-          <img src="assets/img/release-youtube.png" alt="YouTube"></a>
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/release-youtube.png" alt="YouTube"></picture></a>
         <a class="el social-tile" style="--l:250;--t:1999;--w:1923;--h:1182" href="https://open.spotify.com/user/zz2ti7xy6uayefx1wn4px0ejw" target="_blank" rel="noopener" aria-label="Spotify">
-          <img src="assets/img/release-spotify.png" alt="Spotify"></a>
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/release-spotify.png" alt="Spotify"></picture></a>
         <a class="el social-tile" style="--l:3827;--t:1999;--w:1923;--h:1182" href="https://www.instagram.com/lllisafly/" target="_blank" rel="noopener" aria-label="Instagram">
-          <img src="assets/img/release-insta.png" alt="Instagram"></a>
+          <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img src="assets/img/release-insta.png" alt="Instagram"></picture></a>
       </div>
+    </div>
+
+    <div class="m-stage">
+      <h2 class="m-el m-kicker" style="--l:54;--t:252;--w:800;--h:111">links</h2>
+      <a class="m-el m-bleed-l" style="--l:0;--t:393;--w:907;--h:560" href="https://soundcloud.com/lisa_fly" target="_blank" rel="noopener" aria-label="SoundCloud"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/release-sc.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="SoundCloud"></picture></a>
+      <a class="m-el m-bleed-r" style="--l:375;--t:981;--w:913;--h:560" href="https://www.youtube.com/@lisa69fly" target="_blank" rel="noopener" aria-label="YouTube"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/release-yt.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="YouTube"></picture></a>
+      <a class="m-el m-bleed-l" style="--l:0;--t:1569;--w:913;--h:560" href="https://www.instagram.com/lllisafly/" target="_blank" rel="noopener" aria-label="Instagram"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/release-ig.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Instagram"></picture></a>
+      <a class="m-el m-bleed-r" style="--l:375;--t:2157;--w:913;--h:560" href="https://open.spotify.com/user/zz2ti7xy6uayefx1wn4px0ejw" target="_blank" rel="noopener" aria-label="Spotify"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/release-sptf.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Spotify"></picture></a>
+      <p class="m-el m-label" style="--l:1008;--t:623;--w:260;--h:100">• Listen</p>
+      <p class="m-el m-label is-right" style="--l:-13;--t:1211;--w:300;--h:100">Watch •</p>
+      <p class="m-el m-label" style="--l:1008;--t:1799;--w:260;--h:100">• Follow</p>
+      <p class="m-el m-label is-right" style="--l:-13;--t:2387;--w:300;--h:100">Explore •</p>
     </div>
   </section>
 
   <!-- ============================== 8. OUTRO ============================ -->
   <section class="section" data-section="outro" data-tone="dark" style="--bg:url(../assets/img/outro-with-hover.jpg)">
     <div class="stage">
-      <img class="stage__bg" src="assets/img/outro-with-hover.jpg" alt="">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="stage__bg" src="assets/img/outro-with-hover.jpg" alt=""></picture>
 
       <a class="el logo-link" data-goto-cover style="--l:180;--t:110;--w:1350;--h:282" aria-label="Back to cover">
-        <img class="logo-recolor-white" src="assets/img/logo.png" alt="Lisa FLY — back to cover">
+        <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="logo-recolor-white" src="assets/img/logo.png" alt="Lisa FLY — back to cover"></picture>
       </a>
 
       <a class="el h-hero-link" id="danceLink" style="--l:1923;--t:1996;--w:2161;--h:120"
@@ -258,8 +350,14 @@
       </a>
     </div>
     <div class="outro-corner">
-      <img class="outro-cutout" src="assets/img/outro-group26.png" alt="i have DJ KITAS :)">
+      <picture><source media="(orientation: portrait), (max-height: 599px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><img class="outro-cutout" src="assets/img/outro-group26.png" alt="i have DJ KITAS :)"></picture>
     </div>
+
+    <div class="m-stage">
+      <a class="m-el m-dance" style="--l:134;--t:299;--w:1021;--h:224" href="mailto:alisaflyhigh@gmail.com?subject=Collaboration%20Inquiry&amp;body=Hi%20Lisa%2C%0A%0AI%E2%80%99m%20from%20%5Byour%20brand%2Fplace%5D.%20I%20saw%20your%20press%20kit%20and%20would%20love%20to%20collaborate%20with%20you.">let&rsquo;s DANCE<br>together</a>
+      <a class="m-el m-email" style="--l:208;--t:571;--w:872;--h:101" href="mailto:alisaflyhigh@gmail.com?subject=Collaboration%20Inquiry&amp;body=Hi%20Lisa%2C%0A%0AI%E2%80%99m%20from%20%5Byour%20brand%2Fplace%5D.%20I%20saw%20your%20press%20kit%20and%20would%20love%20to%20collaborate%20with%20you.">alisaflyhigh@gmail.com</a>
+    </div>
+    <div class="m-outro-photo"><picture><source media="(orientation: portrait), (max-height: 599px)" srcset="assets/img/m/outro.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Lisa FLY with a disco ball"></picture></div>
   </section>
 
 </main>

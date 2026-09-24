@@ -1,12 +1,18 @@
 (function () {
   "use strict";
 
-  var FLOW_BREAKPOINT = 900; // px viewport width below which we use the stacked mobile layout
+  /* Phone vs tablet is decided by the SHORT side, not the window width:
+     portrait anything -> mobile paged; landscape with a short side < 600
+     (a phone on its side) -> mobile continuous scroll; else desktop. The
+     same queries pick the image files in <picture>, so layout and images
+     always switch together. */
+  var MQ_MOBILE = window.matchMedia("(orientation: portrait), (max-height: 599px)");
+  var MQ_SCROLL = window.matchMedia("(orientation: landscape) and (max-height: 599px)");
 
   var journey = document.querySelector(".journey");
   var sections = Array.prototype.slice.call(document.querySelectorAll(".section"));
   var waveNav = document.getElementById("waveNav");
-  var mobileNav = document.getElementById("mobileNav");
+  var mNav = document.getElementById("mNav");
   var root = document.documentElement;
   var body = document.body;
 
@@ -31,7 +37,7 @@
   }
 
   /* ---------------------------------------------------------------------
-     1. Build the persistent waveform nav (desktop) + compact nav (mobile)
+     1. Build the persistent waveform nav (desktop) + short waveform (mobile)
      ------------------------------------------------------------------- */
 
   function buildWaveNav() {
@@ -103,20 +109,48 @@
   }
 
   function buildMobileNav() {
+    var barsRow = document.createElement("div");
+    barsRow.className = "m-nav__bars";
+    M_NAV_LINES.forEach(function (d) {
+      var line = document.createElement("span");
+      line.className = "m-nav__line";
+      line.style.left = d.left + "px";
+      line.style.top = d.top + "px";
+      line.style.height = d.height + "px";
+      mNav.appendChild(line);
+    });
     SECTION_KEYS.forEach(function (key) {
-      var item = document.createElement("button");
-      item.type = "button";
-      item.className = "mobile-nav__item";
-      item.dataset.section = key;
-      item.textContent = SECTION_LABELS[key];
-      item.addEventListener("click", function () { goToSection(key); });
-      mobileNav.appendChild(item);
+      var group = document.createElement("button");
+      group.type = "button";
+      group.className = "m-nav__group";
+      group.dataset.section = key;
+      group.setAttribute("aria-label", "Go to " + SECTION_LABELS[key]);
+      M_WAVEFORM_BARS[key].forEach(function (h) {
+        var bar = document.createElement("span");
+        bar.className = "m-nav__bar";
+        bar.style.height = h + "px";
+        group.appendChild(bar);
+      });
+      barsRow.appendChild(group);
+
+      var label = document.createElement("button");
+      label.type = "button";
+      label.className = "m-nav__label";
+      label.dataset.section = key;
+      label.style.left = M_NAV_LABEL_OFFSETS[key] + "px";
+      label.textContent = SECTION_LABELS[key];
+      mNav.appendChild(label);
+    });
+    mNav.insertBefore(barsRow, mNav.firstChild);
+    mNav.addEventListener("click", function (e) {
+      var el = e.target.closest("[data-section]");
+      if (el) goToSection(el.dataset.section);
     });
   }
 
   /* ---------------------------------------------------------------------
-     2. Responsive mode: fixed-canvas "stage" (desktop/tablet) vs stacked
-        "flow" (mobile) — recomputed on resize.
+     2. Responsive mode: desktop 6000x3375 "stage" vs the mobile 1288x2800
+        canvas (paged in portrait, continuous in landscape) — on resize.
      ------------------------------------------------------------------- */
 
   function applyResponsiveMode() {
@@ -126,10 +160,26 @@
     // tab bar) the two differ, and using the wrong one lets the scaled
     // 16:9 stage overflow the viewport so its top/bottom get clipped.
     var h = (journey && journey.clientHeight) ? journey.clientHeight : window.innerHeight;
-    var flow = w < FLOW_BREAKPOINT;
-    body.classList.toggle("flow-mode", flow);
-    body.classList.toggle("stage-mode", !flow);
-    if (!flow) {
+    var mobile = MQ_MOBILE.matches;
+    var scroll = mobile && MQ_SCROLL.matches;
+    body.classList.toggle("stage-mode", !mobile);
+    body.classList.toggle("m-mode", mobile);
+    body.classList.toggle("m-paged", mobile && !scroll);
+    body.classList.toggle("m-scroll", scroll);
+    if (mobile) {
+      // portrait: contain-fit like desktop; landscape: fit the width and
+      // let the page scroll. --mxc is the side gap in canvas px, used to
+      // keep edge images on the screen edge.
+      var ms = scroll ? w / 1288 : Math.min(w / 1288, h / 2800);
+      var mx = (w - 1288 * ms) / 2;
+      // landscape: the waveform may take at most 20% of the screen height
+      var ns = scroll ? Math.min(ms, h * 0.2 / 201) : ms;
+      root.style.setProperty("--ms", ms);
+      root.style.setProperty("--mx", mx + "px");
+      root.style.setProperty("--mxc", mx / ms);
+      root.style.setProperty("--mns", ns);
+      root.style.setProperty("--mnx", (w - 1288 * ns) / 2 + "px");
+    } else {
       // Contain-fit: the whole 6000x3375 stage always fits inside the
       // viewport, so real content (waveform, labels, headings, photos)
       // NEVER gets cropped, on any aspect ratio. Any leftover space is
@@ -176,10 +226,8 @@
       el.classList.toggle("is-active", key && el.dataset.section === key);
     });
 
-    mobileNav.querySelectorAll(".mobile-nav__item").forEach(function (el) {
-      var active = key && el.dataset.section === key;
-      el.classList.toggle("is-active", active);
-      if (active) el.scrollIntoView({ inline: "center", block: "nearest" });
+    mNav.querySelectorAll(".m-nav__group, .m-nav__label").forEach(function (el) {
+      el.classList.toggle("is-active", key && el.dataset.section === key);
     });
   }
 
@@ -198,6 +246,13 @@
       var dist = Math.abs(center - viewportCenter);
       if (dist < bestDist) { bestDist = dist; best = sec; }
     });
+    // landscape phone: sections differ in height, so take the one the
+    // screen centre is actually inside
+    if (body.classList.contains("m-scroll")) {
+      best = sections.find(function (sec) {
+        return viewportCenter >= sec.offsetTop && viewportCenter < sec.offsetTop + sec.offsetHeight;
+      }) || best;
+    }
 
     applyActiveState(best);
   }
@@ -220,8 +275,8 @@
      current view fades into the destination's background, the scroll jumps
      instantly while hidden, then the content fades in. No native smooth
      scroll (its easing read as abrupt on a one-section hop), and never a
-     scroll through the sections in between. Mobile flow-mode keeps the
-     simple smooth scroll. */
+     scroll through the sections in between. The landscape-phone ribbon
+     (m-scroll) keeps a simple smooth scroll. */
   /* DROP connector: keep the hairline joining the poster's top-right corner
      to the playlist thumbnail's bottom-left corner while either image grows
      on hover. Each image scales about its own centre by the same factor the
@@ -283,6 +338,10 @@
       a.style.setProperty("--sheen-mask", 'url("' + img.src + '")');
     }
   });
+  document.querySelectorAll("a.m-el source").forEach(function (src) {
+    var abs = new URL(src.getAttribute("srcset"), document.baseURI).href;
+    src.closest("a").style.setProperty("--sheen-mask", 'url("' + abs + '")');
+  });
   document.addEventListener("touchstart", function () {}, { passive: true });
 
   var jumpOverlay = document.createElement("div");
@@ -296,7 +355,7 @@
     var ti = sections.indexOf(target);
     if (ti === cur || jumping) return;
 
-    if (body.classList.contains("flow-mode")) {
+    if (body.classList.contains("m-scroll")) {
       markNavJump(target);
       target.scrollIntoView({ behavior: "smooth" });
       return;
@@ -305,7 +364,9 @@
     jumping = true;
     body.classList.add("nav-jump");
     clearTimeout(navJumpTimer);
-    jumpOverlay.style.backgroundImage = getComputedStyle(target, "::before").backgroundImage;
+    var targetBg = getComputedStyle(target, "::before");
+    jumpOverlay.style.backgroundImage = targetBg.backgroundImage;
+    jumpOverlay.style.backgroundPosition = targetBg.backgroundPosition;
     jumpOverlay.classList.add("is-on");
 
     setTimeout(function () {
@@ -365,7 +426,16 @@
   updateActiveSection();
 
   window.addEventListener("resize", function () {
+    var before = body.className.replace(/\b(nav-jump|on-cover)\b/g, "");
+    var active = sections.find(function (s) { return s.classList.contains("is-active"); });
     applyResponsiveMode();
+    // switching layouts (e.g. rotating a phone) changes every section's
+    // height — stay on the page that was on screen
+    if (active && body.className.replace(/\b(nav-jump|on-cover)\b/g, "") !== before) {
+      journey.style.scrollBehavior = "auto";
+      journey.scrollTop = active.offsetTop;
+      journey.style.scrollBehavior = "";
+    }
     updateActiveSection();
   });
 

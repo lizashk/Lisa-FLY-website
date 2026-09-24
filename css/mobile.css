@@ -1,164 +1,419 @@
 /* ==========================================================================
-   Mobile / narrow-viewport adaptation (< 880px, or very tall aspect ratios).
-   Same content, same three fonts, same dark/light section tones — but laid
-   out as a normal stacked flow instead of the pixel-exact 6000x3375 canvas,
-   and the waveform nav is replaced by a compact scrollable label bar.
-   Per the brief: adapt the layout, don't redesign the concept.
+   Mobile version — phones (both orientations) and portrait tablets.
+   Own vertical master canvas 1288x2800 from the mobile Figma frames. Every
+   element is placed by the same --l/--t/--w/--h canvas numbers as desktop and
+   the whole .m-stage is uniformly scaled by --ms (set in main.js).
+     .m-paged  (portrait): contain-fit, pages change whole, like desktop.
+     .m-scroll (landscape phone): width-fit, one continuous ribbon.
+   Desktop (.stage-mode) never matches any rule here except the two
+   display:none lines at the top.
    ========================================================================== */
 
-.flow-mode .nav-frame,
-.flow-mode .stage-mode-only { display: none !important; }
+/* <picture> only swaps the file per device; it must not add a layout box */
+picture { display: contents; }
 
-.flow-mode .journey { scroll-snap-type: y proximity; }
+.m-nav-frame, .m-stage, .m-cover-logo, .m-intro-fill, .m-outro-photo { display: none; }
 
-.flow-mode .section {
+.m-mode .stage,
+.m-mode .outro-corner,
+.m-mode .nav-frame { display: none !important; }
+.m-mode .m-nav-frame,
+.m-mode .m-stage,
+.m-mode .m-cover-logo,
+.m-mode .m-intro-fill,
+.m-mode .m-outro-photo { display: block; }
+
+/* ---- Sections ------------------------------------------------------------ */
+
+.m-mode .section {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
-  width: 100%;
-  scroll-snap-align: start;
-  display: block;
+  width: 100vw;
   overflow: hidden;
-  padding: 108px 22px 64px;
+  --sh: 100dvh;           /* section height, used by the edge photos below */
 }
-/* fill the section's own padding with an approximate tone colour instead of
-   plain black, so the seam between stacked sections doesn't look like a
-   dropout — cover.jpg/outro art are dark and near-black already, so only
-   the two shared bg tones need a swatch. */
-.flow-mode .section[data-section="intro"],
-.flow-mode .section[data-section="drop"],
-.flow-mode .section[data-section="peak"] { background: #49448b; }
-.flow-mode .section[data-section="build"],
-.flow-mode .section[data-section="break"],
-.flow-mode .section[data-section="release"] { background: #8a91ca; }
-
-.flow-mode .stage {
-  position: relative;
-  width: 100%;
-  height: auto;
-  min-height: calc(100vh - 108px - 64px);
-  transform: none;
-  /* Unlike stage-mode, sections here are in normal document flow, so more
-     than one can be partly on-screen at once — every stage must stay
-     visible regardless of which one is "active" for nav-highlight purposes. */
-  opacity: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
+.m-paged .section {
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
+.m-scroll .journey { scroll-snap-type: none; }
+.m-scroll .section { --sh: calc(2800px * var(--ms)); height: var(--sh); }
+.m-scroll .section[data-role="cover"] { --sh: 100dvh; }
 
-.flow-mode .stage__bg {
+/* Backgrounds: dark blue everywhere, Lisa's photo on the cover. */
+.m-paged .section::before {
+  content: "";
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   z-index: 0;
+  background: #3a3fb0 url(../assets/img/m/bg.jpg) center / cover no-repeat;
 }
-.flow-mode .stage > *:not(.stage__bg) { position: relative; z-index: 1; }
-
-.flow-mode .el {
-  position: static;
-  width: 100% !important;
-  height: auto !important;
-  left: auto; top: auto;
+/* top-anchored so the logo below can be glued to the same photo pixels */
+.m-paged .section[data-role="cover"]::before {
+  background: #8a3fd8 url(../assets/img/m/cover.webp) 50% 0 / cover no-repeat;
 }
-.flow-mode .el img { width: 100%; height: auto; object-fit: cover; }
-
-/* photo grids / card grids collapse to 2-up (or 1-up when noted) */
-.flow-mode .m-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.flow-mode .m-grid-1 { display: flex; flex-direction: column; gap: 14px; }
-.flow-mode .m-grid-2 .el, .flow-mode .m-grid-1 .el { width: 100% !important; }
-
-.flow-mode .h-kicker {
-  font-size: clamp(30px, 9vw, 44px);
-  letter-spacing: 2px;
-  white-space: normal;
-  margin: 0 0 6px;
-}
-.flow-mode .h-title {
-  font-size: clamp(24px, 7vw, 32px);
-  letter-spacing: 2px;
-  margin: 14px 0 10px;
-}
-.flow-mode .body-copy {
-  font-size: clamp(15px, 4.1vw, 18px);
-  line-height: 1.55;
-  text-align: left;
-  letter-spacing: 0.2px;
-}
-.flow-mode .bio-copy {
-  font-size: clamp(15px, 4.1vw, 18px);
-  line-height: 1.55;
-  text-align: left;
-  letter-spacing: 0.2px;
-}
-.flow-mode .bio-copy p + p { margin-top: 12px; }
-.flow-mode .body-copy.is-list,
-.flow-mode .body-copy.is-center { text-align: center; }
-.flow-mode .h-hero-link {
-  font-size: clamp(34px, 11vw, 54px);
-  line-height: 1.15;
-  white-space: normal;
-}
-.flow-mode .mood-card__cap { position: static; font-size: 14px; line-height: 1.4; margin-top: 8px; }
-.flow-mode .info-card__text { gap: 14px; }
-.flow-mode .caption-copy { font-size: 14px; text-align: left !important; }
-.flow-mode .email-link { font-size: clamp(15px, 4vw, 19px); }
-
-.flow-mode .logo-link { width: 220px; height: auto; margin: 0 auto; }
-.flow-mode .logo-link img { object-position: center; }
-
-/* --- compact mobile nav: fixed top bar, tap to jump, active underline --- */
-.mobile-nav {
-  display: none;
+/* landscape: the background stays put, only the content scrolls over it */
+body.m-scroll::before {
+  content: "";
   position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 60;
-  padding: 14px 14px 10px;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
-  overflow-x: auto;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
+  inset: 0;
+  z-index: 0;
+  background: #3a3fb0 url(../assets/img/m/bg-wide.jpg) center / cover no-repeat;
 }
-.mobile-nav::-webkit-scrollbar { display: none; }
-
-.flow-mode .mobile-nav { display: block; }
-
-.mobile-nav__item {
-  display: inline-block;
-  font-family: var(--font-display);
-  font-size: 15px;
-  letter-spacing: 1.6px;
-  color: rgba(255,255,255,0.65);
-  padding: 6px 12px;
-  border-bottom: 2px solid transparent;
-  transition: color 250ms ease, border-color 250ms ease;
+.m-scroll .journey { position: relative; z-index: 1; }
+.m-scroll .section[data-role="cover"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #8a3fd8 url(../assets/img/m/cover-wide.webp) center / cover no-repeat;
 }
-.mobile-nav__item.is-active {
+
+/* ---- Canvas ---------------------------------------------------------------- */
+
+.m-stage {
+  position: absolute;
+  left: var(--mx);
+  top: 0;
+  z-index: 1;
+  width: 1288px;
+  height: 2800px;
+  transform: scale(var(--ms));
+  transform-origin: 0 0;
   color: #fff;
-  border-color: rgb(var(--blue-glow));
-  text-shadow: 0 0 12px rgba(var(--blue-glow), 0.8);
 }
-body.on-cover .mobile-nav__item { color: rgba(255,255,255,0.65); border-color: transparent; text-shadow: none; }
 
+.m-el {
+  position: absolute;
+  margin: 0;
+  left: calc(var(--l) * 1px);
+  top: calc(var(--t) * 1px);
+  width: calc(var(--w) * 1px);
+  height: calc(var(--h) * 1px);
+}
+.m-el img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-/* --- mobile sizing for the reference-accurate elements ------------------- */
-.flow-mode .h-kicker { display: block; }
-.flow-mode .card-list {
-  font-size: clamp(14px, 3.9vw, 17px);
-  line-height: 1.5;
+/* Images that touch the screen edge in the mockup stay on the edge when the
+   screen is wider than the canvas (--mxc = side gap in canvas px). */
+.m-bleed-l { translate: calc(var(--mxc) * -1px) 0; }
+.m-bleed-r { translate: calc(var(--mxc) * 1px) 0; }
+
+/* COVER logo, glued to the cover photo (same cover-fit maths as ::before) */
+.m-cover-logo { position: absolute; z-index: 1; }
+.m-cover-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.m-paged .m-cover-logo {
+  --pw: max(100vw, calc(100dvh * 1288 / 2800));
+  left: calc(50% - var(--pw) / 2 + var(--pw) * 701 / 1288);
+  top: calc(var(--pw) * 263 / 1288);
+  width: calc(var(--pw) * 577 / 1288);
+  height: calc(var(--pw) * 459 / 1288);
+}
+.m-scroll .m-cover-logo {
+  --pw: max(100vw, calc(100dvh * 16 / 9));
+  left: calc(50% - var(--pw) / 2 + var(--pw) * 0.60);
+  top: calc((100dvh - var(--pw) * 0.5625) / 2 + var(--pw) * 0.5625 * 0.26);
+  width: calc(var(--pw) * 0.23);
+  height: calc(var(--pw) * 0.23 * 459 / 577);
+}
+
+/* INTRO bottom photo: starts at canvas y 2548 and always reaches the bottom
+   edge and both side edges. Uses the uncropped original: Lisa's crop is its
+   full width from source y 1116, so the crop's top edge is pinned to the
+   strip's top and the rest of the original extends it downwards/sideways. */
+.m-intro-fill {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: calc(2548px * var(--ms));
+  overflow: hidden;
+}
+.m-intro-fill img {
+  --iw: max(calc(1290px * var(--ms)), 100vw, calc((var(--sh) - 2548px * var(--ms)) / 0.50885));
+  position: absolute;
+  left: 50%;
+  top: calc(var(--iw) * -0.2469);
+  width: var(--iw);
+  height: auto;
+  transform: translateX(-50%);
+}
+
+/* OUTRO photo (disco ball + Lisa), always flush to the bottom */
+.m-outro-photo {
+  position: absolute;
+  z-index: 1;
+  left: var(--mx);
+  bottom: 0;
+  width: calc(1288px * var(--ms));
+  height: calc(2045px * var(--ms));
+  pointer-events: none;
+}
+.m-outro-photo img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: bottom center; }
+
+/* ---- Page transitions (portrait only, same feel as desktop) -------------- */
+
+.m-paged .m-stage,
+.m-paged .m-cover-logo,
+.m-paged .m-intro-fill,
+.m-paged .m-outro-photo {
+  opacity: 0;
+  transition: opacity 1100ms cubic-bezier(.33, 0, .2, 1);
+  will-change: opacity;
+}
+.m-paged .section.is-active .m-stage,
+.m-paged .section.is-active .m-cover-logo,
+.m-paged .section.is-active .m-intro-fill,
+.m-paged .section.is-active .m-outro-photo { opacity: 1; }
+body.m-paged.nav-jump .m-stage,
+body.m-paged.nav-jump .m-cover-logo,
+body.m-paged.nav-jump .m-intro-fill,
+body.m-paged.nav-jump .m-outro-photo { transition-duration: 300ms; }
+
+.m-paged .section.is-active .m-el {
+  animation: rise-in 1100ms cubic-bezier(.33, 0, .2, 1) both;
+}
+body.nav-jump .section.is-active .m-el,
+.m-paged .section.is-active.no-rise .m-el {
+  animation: none;
+  opacity: 1;
+}
+
+/* ---- Type (Figma mobile text styles) -------------------------------------- */
+
+.m-kicker {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 80px;
+  line-height: 111px;
+  letter-spacing: 2.4px;
+  white-space: nowrap;
+  text-shadow: -2px 3px 21px rgba(var(--blue-glow), 0.66);
+}
+.m-title {
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-size: 69px;
+  line-height: 111px;
+  letter-spacing: 2.76px;
+  white-space: nowrap;
+}
+.m-body {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 44px;
+  letter-spacing: 0.6px;
+  text-align: justify;
+}
+.m-body p { margin: 0; }
+/* intro bio is set larger in the mockup: 22 lines filling its 1210px box */
+.m-body.m-bio { font-size: 34px; line-height: 55px; }
+.m-body.is-lower { text-transform: lowercase; }
+.m-emph {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 31px;
+  line-height: 44px;
+  letter-spacing: 0.62px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 0 21px rgba(var(--blue-glow), 0.55);
+}
+.m-list {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 50px;
+  letter-spacing: 0.6px;
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+.m-bullets {
+  list-style: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 50px;
+  letter-spacing: 0.6px;
+}
+.m-bullets li { position: relative; padding-left: 45px; white-space: nowrap; }
+.m-bullets li::before { content: "\2022"; position: absolute; left: 17px; }
+.m-cap {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 33px;
   text-align: center;
+  white-space: nowrap;
 }
-.flow-mode .intro-lines { font-size: clamp(15px, 4.1vw, 18px); line-height: 1.5; }
-.flow-mode .intro-lines p + p { margin-top: 8px; }
-.flow-mode .mood-cap { font-size: 13px; line-height: 1.35; margin-top: 6px; }
-.flow-mode .connector { display: none; }
-.flow-mode .bullet-list { font-size: clamp(15px, 4.1vw, 18px); line-height: 1.55; }
-.flow-mode .bullet-list li { padding-left: 20px; }
-.flow-mode .bullet-list.is-justify li { text-align: left; }
-.flow-mode .soundcloud-label { font-size: 16px; letter-spacing: 1.2px; justify-content: flex-start; }
-.flow-mode .el .soundcloud-icon { width: 44px; height: 44px; }
-.flow-mode .speech-bubble { width: 150px !important; height: 104px !important; }
-.flow-mode .speech-bubble span { font-size: 13px; }
-.flow-mode .outro-cutout { max-height: 170px; object-position: bottom left; }
+.m-label,
+.m-more {
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-size: 55px;
+  letter-spacing: 2.2px;
+  white-space: nowrap;
+}
+.m-label { line-height: 100px; }
+.m-more { line-height: 111px; text-align: right; }
+.m-title.is-right,
+.m-list.is-right,
+.m-label.is-right { text-align: right; }
+
+.m-dance {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 104px;
+  line-height: 112px;
+  letter-spacing: 2px;
+  text-transform: lowercase;
+  text-align: center;
+  white-space: nowrap;
+  color: #ece4fb;
+  text-shadow: -2px 5px 11px rgba(0, 0, 0, 0.33);
+}
+.m-email {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 101px;
+  letter-spacing: 0.6px;
+  text-align: center;
+  white-space: nowrap;
+  color: #ece4fb;
+}
+
+/* DROP poster frame, SoundCloud mark */
+.m-poster { border: 3px solid #fff; }
+.m-sc-icon img { object-fit: contain; }
+
+/* ---- Waveform nav (short mobile version) ---------------------------------- */
+
+.m-nav-frame {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+.m-nav-canvas {
+  position: absolute;
+  left: var(--mnx);
+  top: 0;
+  width: 1288px;
+  height: 230px;
+  transform: scale(var(--mns));
+  transform-origin: 0 0;
+}
+.m-nav { position: absolute; inset: 0; }
+
+/* bars row: 123px tall, centred on x 644.45 (Figma), top 32 */
+.m-nav__bars {
+  position: absolute;
+  left: 0.9px;
+  top: 32px;
+  width: 1288px;
+  height: 123px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9.7px;
+}
+.m-nav__group {
+  display: flex;
+  align-items: center;
+  gap: 9.7px;
+  height: 100%;
+  padding: 0;
+  opacity: 0.82;
+  pointer-events: auto;
+  transition: opacity 500ms ease, gap 450ms cubic-bezier(.2, .8, .2, 1), filter 450ms ease;
+}
+.m-nav__bar {
+  flex: none;
+  width: 6px;
+  background: #fff;
+  transition: width 450ms cubic-bezier(.2, .8, .2, 1);
+}
+.m-nav__group.is-active {
+  opacity: 1;
+  gap: 6.5px;
+  filter: drop-shadow(-2px 3px 10.5px rgba(var(--blue-glow), 0.66));
+}
+.m-nav__group.is-active .m-nav__bar { width: 9px; }
+
+.m-nav__line {
+  position: absolute;
+  width: 1px;
+  background: #fff;
+  opacity: 0.5;
+}
+
+.m-nav__label {
+  position: absolute;
+  top: 177px;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1.128;
+  letter-spacing: 1.36px;
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: auto;
+  transform: translateX(-50%);
+  transition: text-shadow 450ms ease;
+}
+.m-nav__label.is-active {
+  top: 178px;
+  font-size: 20px;
+  letter-spacing: 0.4px;
+  text-shadow: -2px 3px 21px rgba(var(--blue-glow), 0.66);
+}
+
+/* ---- Links: hover (mouse) / sheen + tap feedback (touch) — as on desktop --- */
+
+.m-mode a.m-el:has(img) { transition: transform 220ms ease; }
+.m-mode a.m-el img { transition: filter 220ms ease; }
+.m-mode .m-dance,
+.m-mode .m-email { transition: transform 300ms ease; }
+@media (hover: hover) {
+  .m-mode a.m-el:has(img):hover {
+    transform: scale(calc(1 + 12 / (var(--w) * var(--ms))));
+    z-index: 3;
+  }
+  .m-mode a.m-el:hover img { filter: brightness(1.14); }
+  .m-mode .m-dance:hover { transform: scale(1.045); }
+  .m-mode .m-email:hover { transform: scale(1.06); }
+}
+@media (hover: none) {
+  .m-mode a.m-el:has(img)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(120deg, transparent 45%, rgba(255,255,255,0.18) 47.5%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.18) 52.5%, transparent 55%);
+    background-size: 300% 300%;
+    background-position: 100% 100%;
+    -webkit-mask: var(--sheen-mask) center / cover no-repeat;
+            mask: var(--sheen-mask) center / cover no-repeat;
+    opacity: 0;
+  }
+  .m-mode a.m-sc-icon::after {
+    -webkit-mask-size: contain;
+            mask-size: contain;
+  }
+  .m-mode .section.is-active a.m-el:has(img)::after {
+    animation: link-sheen 1500ms cubic-bezier(.45, 0, .55, 1) 600ms 1 both;
+  }
+  .m-mode a.m-el:has(img) { transition: transform 140ms ease; }
+  .m-mode a.m-el:has(img):active {
+    transform: scale(calc(1 + 12 / (var(--w) * var(--ms))));
+    z-index: 3;
+  }
+  .m-mode a.m-el:has(img):active img { filter: brightness(1.14); }
+}
