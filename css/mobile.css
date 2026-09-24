@@ -139,13 +139,15 @@ body.m-scroll::before {
 }
 
 /* OUTRO photo (disco ball + Lisa), always flush to the bottom */
+/* uncropped original: Lisa's crop is at (205, 5) in it, 3593.5 px wide ->
+   the whole ball spans canvas x -73.5 .. 1360.2, bottom 12.7 below canvas */
 .m-outro-photo {
   position: absolute;
   z-index: 1;
-  left: var(--mx);
-  bottom: 0;
-  width: calc(1288px * var(--ms));
-  height: calc(2045px * var(--ms));
+  left: calc(var(--mx) - 73.5px * var(--ms));
+  bottom: calc(-12.7px * var(--ms));
+  width: calc(1433.7px * var(--ms));
+  height: calc(2059.5px * var(--ms));
   pointer-events: none;
 }
 .m-outro-photo img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: bottom center; }
