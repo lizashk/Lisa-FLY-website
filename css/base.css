@@ -179,6 +179,27 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   margin-top: -1px;
 }
 .intro-fill img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Screens squarer than 16:9: the strip grows taller than the photo and a
+   cover-fit crop would lose the side masks. The uncropped original takes
+   over instead: Lisa's crop (its full width, from source y 1152 of 3416) is
+   pinned to the strip's top and the rest of the photo fills downwards. It
+   frames exactly like intro-4.jpg at the switch point; 16:9 and wider never
+   use it. */
+.intro-fill__wide { display: none; }
+@media (max-aspect-ratio: 1776/1000) {
+  .stage-mode .intro-fill img:not(.intro-fill__wide) { display: none; }
+  .stage-mode .intro-fill .intro-fill__wide {
+    --iw: max(100vw, calc((100dvh - 100vw * 2251 / 6000) * 4520 / 2264));
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: calc(var(--iw) * -1152 / 4520);
+    width: var(--iw);
+    height: auto;
+    max-width: none;
+    transform: translateX(-50%);
+  }
+}
 
 /* ---- OUTRO corner sticker — always flush to the viewport bottom ----------
    Lifted out of the scaled scene into its own fixed-to-the-section layer so
