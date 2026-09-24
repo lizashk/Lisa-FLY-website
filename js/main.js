@@ -154,6 +154,15 @@
         if (el) goToSection(el.dataset.section);
       });
       sec.querySelector(".m-stage").appendChild(copy);
+
+      // extra snap points so a page taller than the screen can rest at its
+      // bottom (and middle), not only at its top — see .m-snap in mobile.css
+      ["end", "mid"].forEach(function (kind) {
+        var snap = document.createElement("span");
+        snap.className = "m-snap m-snap--" + kind;
+        snap.setAttribute("aria-hidden", "true");
+        sec.appendChild(snap);
+      });
     });
   }
 
@@ -175,6 +184,12 @@
     if (mobile) {
       // the mockup always fills the screen width; pages may be taller
       root.style.setProperty("--ms", w / 1288);
+      // a middle stop is only needed when the top and bottom views leave a
+      // strip of the page unseen (page taller than two screens)
+      var pageH = Math.max(h, 2800 * w / 1288);
+      document.querySelectorAll(".m-snap--mid").forEach(function (el) {
+        el.style.display = pageH > 2 * h ? "" : "none";
+      });
     } else {
       // Contain-fit: the whole 6000x3375 stage always fits inside the
       // viewport, so real content (waveform, labels, headings, photos)
@@ -393,7 +408,7 @@
       a.style.setProperty("--sheen-mask", 'url("' + img.src + '")');
     }
   });
-  document.querySelectorAll("a.m-el source").forEach(function (src) {
+  document.querySelectorAll("a.m-el source, a.m-outro-ball source").forEach(function (src) {
     var abs = new URL(src.getAttribute("srcset"), document.baseURI).href;
     src.closest("a").style.setProperty("--sheen-mask", 'url("' + abs + '")');
   });

@@ -12,7 +12,7 @@
 /* <picture> only swaps the file per device; it must not add a layout box */
 picture { display: contents; }
 
-.m-stage, .m-cover-logo, .m-intro-fill, .m-outro-photo { display: none; }
+.m-stage, .m-cover-logo, .m-intro-fill, .m-outro-ball, .m-outro-me, .m-snap { display: none; }
 
 .m-mode .stage,
 .m-mode .outro-corner,
@@ -20,7 +20,9 @@ picture { display: contents; }
 .m-mode .m-stage,
 .m-mode .m-cover-logo,
 .m-mode .m-intro-fill,
-.m-mode .m-outro-photo { display: block; }
+.m-mode .m-outro-ball,
+.m-mode .m-outro-me,
+.m-mode .m-snap { display: block; }
 
 /* ---- Sections ------------------------------------------------------------ */
 
@@ -37,6 +39,21 @@ picture { display: contents; }
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
+
+/* Snap points inside a page taller than the screen (added by main.js):
+   its bottom edge, and its middle when even two screens don't cover it.
+   Without them Safari only knows page tops and throws the page back up
+   (or on to the next page) when you scroll to see the bottom. */
+.m-snap {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  scroll-snap-stop: always;
+}
+.m-snap--end { bottom: 0; scroll-snap-align: end; }
+.m-snap--mid { top: calc(50% - 0.5px); scroll-snap-align: center; }
 
 /* Backgrounds: dark blue everywhere, Lisa's photo on the cover. */
 .m-mode .section::before {
@@ -106,26 +123,39 @@ picture { display: contents; }
   max-width: none;
 }
 
-/* OUTRO photo (disco ball + Lisa), always flush to the bottom */
-/* uncropped original: Lisa's crop is at (205, 5) in it, 3593.5 px wide ->
-   the whole ball spans canvas x -73.5 .. 1360.2, bottom 12.7 below canvas */
-.m-outro-photo {
+/* OUTRO: disco ball and Lisa as two layers, bottom-anchored like the
+   mockup (in canvas px, 2800 = page bottom). The ball is a link back to the
+   cover; its hit area is the ball itself, Lisa on top lets taps through. */
+.m-outro-ball,
+.m-outro-me {
   position: absolute;
   z-index: 1;
-  left: calc(-73.5px * var(--ms));
-  bottom: calc(-12.7px * var(--ms));
-  width: calc(1433.7px * var(--ms));
-  height: calc(2059.5px * var(--ms));
+}
+.m-outro-ball {
+  --w: 1437.3;
+  left: calc(-76.4px * var(--ms));
+  bottom: calc(631.7px * var(--ms));
+  width: calc(1437.3px * var(--ms));
+  height: calc(1418px * var(--ms));
+  clip-path: circle(50%);
+}
+.m-outro-me {
+  left: calc(52.7px * var(--ms));
+  bottom: calc(-52.1px * var(--ms));
+  width: calc(1180px * var(--ms));
+  height: calc(1948.4px * var(--ms));
   pointer-events: none;
 }
-.m-outro-photo img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: bottom center; }
+.m-outro-ball img,
+.m-outro-me img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
 /* ---- Page transitions (same feel as desktop) ---------------------------- */
 
 .m-mode .m-stage,
 .m-mode .m-cover-logo,
 .m-mode .m-intro-fill,
-.m-mode .m-outro-photo {
+.m-mode .m-outro-ball,
+.m-mode .m-outro-me {
   opacity: 0;
   transition: opacity 1100ms cubic-bezier(.33, 0, .2, 1);
   will-change: opacity;
@@ -133,11 +163,13 @@ picture { display: contents; }
 .m-mode .section.is-active .m-stage,
 .m-mode .section.is-active .m-cover-logo,
 .m-mode .section.is-active .m-intro-fill,
-.m-mode .section.is-active .m-outro-photo { opacity: 1; }
+.m-mode .section.is-active .m-outro-ball,
+.m-mode .section.is-active .m-outro-me { opacity: 1; }
 body.m-mode.nav-jump .m-stage,
 body.m-mode.nav-jump .m-cover-logo,
 body.m-mode.nav-jump .m-intro-fill,
-body.m-mode.nav-jump .m-outro-photo { transition-duration: 300ms; }
+body.m-mode.nav-jump .m-outro-ball,
+body.m-mode.nav-jump .m-outro-me { transition-duration: 300ms; }
 
 .m-mode .section.is-active .m-el {
   animation: rise-in 1100ms cubic-bezier(.33, 0, .2, 1) both;
@@ -337,21 +369,26 @@ body.nav-jump .section.is-active .m-el,
 
 /* ---- Links: hover (mouse) / sheen + tap feedback (touch) — as on desktop --- */
 
-.m-mode a.m-el:has(img) { transition: transform 220ms ease; }
-.m-mode a.m-el img { transition: filter 220ms ease; }
+.m-mode a.m-el:has(img),
+.m-mode a.m-outro-ball { transition: transform 220ms ease; }
+.m-mode a.m-el img,
+.m-mode a.m-outro-ball img { transition: filter 220ms ease; }
 .m-mode .m-dance,
 .m-mode .m-email { transition: transform 300ms ease; }
 @media (hover: hover) {
-  .m-mode a.m-el:has(img):hover {
+  .m-mode a.m-el:has(img):hover,
+  .m-mode a.m-outro-ball:hover {
     transform: scale(calc(1 + 12 / (var(--w) * var(--ms))));
     z-index: 3;
   }
-  .m-mode a.m-el:hover img { filter: brightness(1.14); }
+  .m-mode a.m-el:hover img,
+  .m-mode a.m-outro-ball:hover img { filter: brightness(1.14); }
   .m-mode .m-dance:hover { transform: scale(1.045); }
   .m-mode .m-email:hover { transform: scale(1.06); }
 }
 @media (hover: none) {
-  .m-mode a.m-el:has(img)::after {
+  .m-mode a.m-el:has(img)::after,
+  .m-mode a.m-outro-ball::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -367,13 +404,40 @@ body.nav-jump .section.is-active .m-el,
     -webkit-mask-size: contain;
             mask-size: contain;
   }
-  .m-mode .section.is-active a.m-el:has(img)::after {
+  .m-mode .section.is-active a.m-el:has(img)::after,
+  .m-mode .section.is-active a.m-outro-ball::after {
     animation: link-sheen 1500ms cubic-bezier(.45, 0, .55, 1) 600ms 1 both;
   }
-  .m-mode a.m-el:has(img) { transition: transform 140ms ease; }
+  .m-mode a.m-el:has(img),
+  .m-mode a.m-outro-ball { transition: transform 140ms ease; }
   .m-mode a.m-el:has(img):active {
     transform: scale(calc(1 + 12 / (var(--w) * var(--ms))));
     z-index: 3;
   }
-  .m-mode a.m-el:has(img):active img { filter: brightness(1.14); }
+  .m-mode a.m-outro-ball:active { transform: scale(calc(1 + 12 / (var(--w) * var(--ms)))); }
+  .m-mode a.m-el:has(img):active img,
+  .m-mode a.m-outro-ball:active img { filter: brightness(1.14); }
+
+  /* the same sheen across "let's DANCE together" and the email: a copy of
+     the text (data-sheen) painted with a moving highlight */
+  .m-mode .m-dance::after,
+  .m-mode .m-email::after {
+    content: attr(data-sheen);
+    position: absolute;
+    inset: 0;
+    white-space: pre;
+    pointer-events: none;
+    color: transparent;
+    text-shadow: none;
+    background: linear-gradient(120deg, transparent 42%, rgba(255,255,255,0.35) 46%, #fff 50%, rgba(255,255,255,0.35) 54%, transparent 58%);
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+            background-clip: text;
+    opacity: 0;
+  }
+  .m-mode .section.is-active .m-dance::after,
+  .m-mode .section.is-active .m-email::after {
+    animation: link-sheen 1500ms cubic-bezier(.45, 0, .55, 1) 600ms 1 both;
+  }
 }
