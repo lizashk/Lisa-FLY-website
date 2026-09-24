@@ -91,18 +91,53 @@ picture { display: contents; }
 .m-mode .section[data-role="cover"],
 .m-mode .section[data-section="outro"] { --sh: 100dvh; }
 
-/* Tablets (portrait but much wider than a phone): the uncropped cover photo,
-   framed on Lisa, logo glued to the photo to the right of her head. */
-@media (orientation: portrait) and (min-aspect-ratio: 62/100) {
+/* Short phones (screen wider than 1:2, e.g. a phone browser with its bars):
+   the tall cover would hide the controller. The uncropped photo (cover-tall:
+   Lisa's crop of "cover (not cropped)" with 150px of pink added on top) is
+   scaled so her headphones sit just under the waveform labels (canvas y 226)
+   and the controller shows 230 canvas px above the screen bottom; never
+   bigger than the usual cover. Photo px: headphones top 347, controller
+   top 2144, Lisa's centre x 949.7. Logo glued to the photo sideways, top
+   level with the headphones. */
+@media (orientation: portrait) and (min-aspect-ratio: 1/2) {
+  .m-mode .section[data-role="cover"] {
+    --cf: min(calc((var(--sh) - 456px * var(--ms)) / 1797), calc(1.1255px * var(--ms)));
+  }
   .m-mode .section[data-role="cover"]::before {
-    background: #8a3fd8 url(../assets/img/m/cover-wide.webp) 46% 0 / cover no-repeat;
+    background: #b04ce6 url(../assets/img/m/cover-tall.webp)
+      calc(50vw - var(--cf) * 949.7) calc(226px * var(--ms) - var(--cf) * 347) /
+      calc(var(--cf) * 1900) auto no-repeat;
   }
   .m-mode .m-cover-logo {
-    --pw: max(100vw, calc(var(--sh) * 5904 / 3321));
-    left: calc((100vw - var(--pw)) * 0.46 + var(--pw) * 0.49);
-    top: calc(var(--pw) * 0.5625 * 0.13);
-    width: calc(var(--pw) * 0.15);
-    height: calc(var(--pw) * 0.15 * 459 / 577);
+    left: calc(50vw + var(--cf) * 50.6);
+    top: calc(226px * var(--ms));
+    width: calc(var(--cf) * 512.6);
+    height: calc(var(--cf) * 512.6 * 459 / 577);
+  }
+}
+
+/* Tablets (portrait but much wider than a phone): the uncropped cover photo
+   at full screen height, Lisa's head (photo x 44.18%) under the BREAK label
+   (canvas x 699.5), never leaving a gap at the sides. Logo glued to the
+   photo's height, its right edge where the waveform bars end (36.1 canvas px
+   from the edge; the logo file has 4/866 of empty margin on the right), and
+   never wider than the room right of her headphones (photo x 48.86%). */
+@media (orientation: portrait) and (min-aspect-ratio: 62/100) {
+  .m-mode .section[data-role="cover"] {
+    --tpw: max(100vw, calc(var(--sh) * 4267 / 2400));
+    --cx: clamp(calc(100vw - var(--tpw)), calc(100vw * 699.5 / 1288 - var(--tpw) * 0.4418), 0px);
+    --lw: min(calc(var(--tpw) * 0.15),
+              calc(100vw - 36.1px * var(--ms) - var(--cx) - var(--tpw) * 0.4886 - 20px * var(--ms)));
+  }
+  .m-mode .section[data-role="cover"]::before {
+    background: #8a3fd8 url(../assets/img/m/cover-wide.webp) var(--cx) 0 / var(--tpw) auto no-repeat;
+  }
+  .m-mode .m-cover-logo {
+    left: auto;
+    right: calc(36.1px * var(--ms) - var(--lw) * 4 / 866);
+    top: calc(var(--tpw) * 0.5625 * 0.13);
+    width: var(--lw);
+    height: calc(var(--lw) * 459 / 577);
   }
 }
 
@@ -125,9 +160,12 @@ picture { display: contents; }
   max-width: none;
 }
 
-/* OUTRO: disco ball and Lisa as two layers, bottom-anchored like the
-   mockup (in canvas px, 2800 = page bottom). The ball is a link back to the
-   cover; its hit area is the ball itself, Lisa on top lets taps through. */
+/* OUTRO: disco ball and Lisa as two layers from Lisa's files. The ball is
+   a link back to the cover; its hit area is the ball itself, Lisa on top
+   lets taps through. Lisa is bottom-anchored at scale --oa, the ball at
+   scale --ob with its top at --obt (all from main.js): on phones the ball
+   keeps its place around Lisa and shrinks with her, so it is never cut at
+   the sides; on tablets it keeps the page width and sits under the email. */
 .m-outro-ball,
 .m-outro-me {
   position: absolute;
@@ -135,14 +173,12 @@ picture { display: contents; }
 }
 .m-outro-ball {
   --w: 1437.3;
-  left: calc(-76.4px * var(--ms));
-  top: calc(750.3px * var(--ms));
-  width: calc(1437.3px * var(--ms));
-  height: calc(1418px * var(--ms));
+  left: calc(50% - 720.45px * var(--ob, var(--ms)));
+  top: calc(var(--obt, 750.3) * 1px);
+  width: calc(1437.3px * var(--ob, var(--ms)));
+  height: calc(1418px * var(--ob, var(--ms)));
   clip-path: circle(50%);
 }
-/* Lisa shrinks (--oa, main.js) when the screen is too short to show her at
-   the page scale under the email; the ball keeps the page width behind her */
 .m-outro-me {
   left: calc(50% - 591.3px * var(--oa, var(--ms)));
   bottom: calc(-52.1px * var(--oa, var(--ms)));
@@ -156,6 +192,16 @@ picture { display: contents; }
 /* No page fade on mobile: fading a page's opacity makes the browser keep the
    whole scaled 1288x2800 canvas in video memory at full size (~130 MB per
    page on an iPhone) and iOS reloaded the tab after a few pages. */
+
+/* RELEASE: main.js spreads the content when there is room (canvas px):
+   --rs moves everything down so it sits in the middle between the
+   waveform and the page bottom, --rg adds air between LINKS and the first
+   vinyl, --rv takes it back from the gaps between vinyls (tablets, where
+   the page can't get taller). Each vinyl and its label carry their index
+   --ri; the title has --rk:0 so only --rs moves it. */
+.m-mode .section[data-section="release"] .m-el {
+  translate: 0 calc((var(--rs, 0) + var(--rg, 0) * var(--rk, 1) - var(--rv, 0) * var(--ri, 0)) * 1px);
+}
 
 /* ---- Type (Figma mobile text styles) -------------------------------------- */
 
@@ -424,4 +470,22 @@ picture { display: contents; }
 @keyframes m-sheen {
   from { background-position: 100% 100%; }
   to   { background-position: 0% 0%; }
+}
+
+/* OUTRO on tablets: "let's DANCE together" on one line and a smaller email,
+   so the ball (main.js: --obt) moves up under them. Canvas px; !important
+   because the phone boxes are inline styles. */
+@media (orientation: portrait) and (min-aspect-ratio: 62/100) {
+  .m-mode .m-dance {
+    --t: 290 !important; --l: 44 !important; --w: 1200 !important; --h: 84 !important;
+    font-size: 70px;
+    line-height: 84px;
+  }
+  .m-mode .m-dance br { display: none; }
+  .m-mode .m-dance::after { white-space: nowrap; }
+  .m-mode .m-email {
+    --t: 392 !important; --l: 244 !important; --w: 800 !important; --h: 72 !important;
+    font-size: 42px;
+    line-height: 72px;
+  }
 }

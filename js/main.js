@@ -5,6 +5,8 @@
      (including a phone on its side) the desktop one. The same query picks
      the image files in <picture>, so layout and images switch together. */
   var MQ_MOBILE = window.matchMedia("(orientation: portrait)");
+  // portrait tablets: much wider than a phone (same query as mobile.css)
+  var MQ_TABLET = window.matchMedia("(orientation: portrait) and (min-aspect-ratio: 62/100)");
 
   var journey = document.querySelector(".journey");
   var sections = Array.prototype.slice.call(document.querySelectorAll(".section"));
@@ -187,9 +189,36 @@
     if (mobile) {
       // the mockup always fills the screen width; pages may be taller
       root.style.setProperty("--ms", w / 1288);
-      // outro is one screen: Lisa gets the height left under the email
+      // outro is one screen. Phones: Lisa and the ball shrink together to
+      // fit under the email (ball top 78 canvas px below it, 2110.1 = ball
+      // top to Lisa's bottom at her scale), so the ball is never cut at the
+      // sides. Tablets: the text is smaller (mobile.css), the ball keeps the
+      // page width right under the email, Lisa gets the height below.
       var ms = w / 1288, outro = document.querySelector('section[data-section="outro"]');
-      if (outro) outro.style.setProperty("--oa", Math.min(ms, (h - 755 * ms) / 2045));
+      if (outro) {
+        var oa, ob, obt;
+        if (MQ_TABLET.matches) {
+          oa = Math.min(ms, (h - 547 * ms) / 2045); ob = ms; obt = 542 * ms;
+        } else {
+          oa = Math.min(ms, (h - 750.3 * ms) / 2110.1); ob = oa; obt = h - 2110.1 * oa;
+        }
+        outro.style.setProperty("--oa", oa);
+        outro.style.setProperty("--ob", ob);
+        outro.style.setProperty("--obt", obt);
+      }
+      // release (2538 canvas px of content): on a screen taller than that,
+      // up to 60px more air under LINKS and the rest split evenly above the
+      // title (56px to the waveform labels) and below the last vinyl (83px);
+      // on tablets 60px more under LINKS, taken from the 3 gaps between vinyls.
+      var release = document.querySelector('section[data-section="release"]');
+      if (release) {
+        var extra = Math.max(0, h / ms - 2538);
+        var rg = MQ_TABLET.matches ? 60 : Math.min(60, extra);
+        var rv = MQ_TABLET.matches ? 20 : 0;
+        release.style.setProperty("--rg", rg);
+        release.style.setProperty("--rv", rv);
+        release.style.setProperty("--rs", Math.max(0, (extra - Math.min(rg, extra) + Math.min(extra, 27)) / 2));
+      }
     } else {
       // Contain-fit: the whole 6000x3375 stage always fits inside the
       // viewport, so real content (waveform, labels, headings, photos)
