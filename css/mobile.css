@@ -1,23 +1,22 @@
 /* ==========================================================================
-   Mobile version — phones (both orientations) and portrait tablets.
+   Mobile version — any portrait screen (phones, portrait tablets).
    Own vertical master canvas 1288x2800 from the mobile Figma frames. Every
    element is placed by the same --l/--t/--w/--h canvas numbers as desktop and
-   the whole .m-stage is uniformly scaled by --ms (set in main.js).
-     .m-paged  (portrait): contain-fit, pages change whole, like desktop.
-     .m-scroll (landscape phone): width-fit, one continuous ribbon.
-   Desktop (.stage-mode) never matches any rule here except the two
-   display:none lines at the top.
+   the whole .m-stage is scaled to the screen WIDTH by --ms = W/1288 (main.js),
+   so the mockup always spans edge to edge. A page is therefore usually a bit
+   taller than the screen and scrolls; the next page snaps in after it.
+   Landscape phones get the desktop version. Desktop (.stage-mode) never
+   matches any rule here except the display:none lines at the top.
    ========================================================================== */
 
 /* <picture> only swaps the file per device; it must not add a layout box */
 picture { display: contents; }
 
-.m-nav-frame, .m-stage, .m-cover-logo, .m-intro-fill, .m-outro-photo { display: none; }
+.m-stage, .m-cover-logo, .m-intro-fill, .m-outro-photo { display: none; }
 
 .m-mode .stage,
 .m-mode .outro-corner,
 .m-mode .nav-frame { display: none !important; }
-.m-mode .m-nav-frame,
 .m-mode .m-stage,
 .m-mode .m-cover-logo,
 .m-mode .m-intro-fill,
@@ -25,23 +24,22 @@ picture { display: contents; }
 
 /* ---- Sections ------------------------------------------------------------ */
 
+/* The journey keeps desktop's mandatory snapping: a page taller than the
+   screen scrolls freely to its own bottom, then the next swipe lands on the
+   next page's top — pages never stop half-way between each other. */
 .m-mode .section {
   position: relative;
   width: 100vw;
+  /* the scaled mockup, or the screen if that is taller */
+  --sh: max(100dvh, calc(2800px * var(--ms)));
+  height: var(--sh);
   overflow: hidden;
-  --sh: 100dvh;           /* section height, used by the edge photos below */
-}
-.m-paged .section {
-  height: 100dvh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
-.m-scroll .journey { scroll-snap-type: none; }
-.m-scroll .section { --sh: calc(2800px * var(--ms)); height: var(--sh); }
-.m-scroll .section[data-role="cover"] { --sh: 100dvh; }
 
 /* Backgrounds: dark blue everywhere, Lisa's photo on the cover. */
-.m-paged .section::before {
+.m-mode .section::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -49,30 +47,15 @@ picture { display: contents; }
   background: #3a3fb0 url(../assets/img/m/bg.jpg) center / cover no-repeat;
 }
 /* top-anchored so the logo below can be glued to the same photo pixels */
-.m-paged .section[data-role="cover"]::before {
+.m-mode .section[data-role="cover"]::before {
   background: #8a3fd8 url(../assets/img/m/cover.webp) 50% 0 / cover no-repeat;
-}
-/* landscape: the background stays put, only the content scrolls over it */
-body.m-scroll::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  background: #3a3fb0 url(../assets/img/m/bg-wide.jpg) center / cover no-repeat;
-}
-.m-scroll .journey { position: relative; z-index: 1; }
-.m-scroll .section[data-role="cover"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #8a3fd8 url(../assets/img/m/cover-wide.webp) center / cover no-repeat;
 }
 
 /* ---- Canvas ---------------------------------------------------------------- */
 
 .m-stage {
   position: absolute;
-  left: var(--mx);
+  left: 0;
   top: 0;
   z-index: 1;
   width: 1288px;
@@ -92,28 +75,17 @@ body.m-scroll::before {
 }
 .m-el img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-/* Images that touch the screen edge in the mockup stay on the edge when the
-   screen is wider than the canvas (--mxc = side gap in canvas px). */
-.m-bleed-l { translate: calc(var(--mxc) * -1px) 0; }
-.m-bleed-r { translate: calc(var(--mxc) * 1px) 0; }
-
 /* COVER logo, glued to the cover photo (same cover-fit maths as ::before) */
-.m-cover-logo { position: absolute; z-index: 1; }
-.m-cover-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.m-paged .m-cover-logo {
-  --pw: max(100vw, calc(100dvh * 1288 / 2800));
+.m-cover-logo {
+  --pw: max(100vw, calc(var(--sh) * 1288 / 2800));
+  position: absolute;
+  z-index: 1;
   left: calc(50% - var(--pw) / 2 + var(--pw) * 701 / 1288);
   top: calc(var(--pw) * 263 / 1288);
   width: calc(var(--pw) * 577 / 1288);
   height: calc(var(--pw) * 459 / 1288);
 }
-.m-scroll .m-cover-logo {
-  --pw: max(100vw, calc(100dvh * 16 / 9));
-  left: calc(50% - var(--pw) / 2 + var(--pw) * 0.60);
-  top: calc((100dvh - var(--pw) * 0.5625) / 2 + var(--pw) * 0.5625 * 0.26);
-  width: calc(var(--pw) * 0.23);
-  height: calc(var(--pw) * 0.23 * 459 / 577);
-}
+.m-cover-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
 /* INTRO bottom photo: starts at canvas y 2548 and always reaches the bottom
    edge and both side edges. Uses the uncropped original: Lisa's crop is its
@@ -144,7 +116,7 @@ body.m-scroll::before {
 .m-outro-photo {
   position: absolute;
   z-index: 1;
-  left: calc(var(--mx) - 73.5px * var(--ms));
+  left: calc(-73.5px * var(--ms));
   bottom: calc(-12.7px * var(--ms));
   width: calc(1433.7px * var(--ms));
   height: calc(2059.5px * var(--ms));
@@ -152,30 +124,30 @@ body.m-scroll::before {
 }
 .m-outro-photo img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: bottom center; }
 
-/* ---- Page transitions (portrait only, same feel as desktop) -------------- */
+/* ---- Page transitions (same feel as desktop) ---------------------------- */
 
-.m-paged .m-stage,
-.m-paged .m-cover-logo,
-.m-paged .m-intro-fill,
-.m-paged .m-outro-photo {
+.m-mode .m-stage,
+.m-mode .m-cover-logo,
+.m-mode .m-intro-fill,
+.m-mode .m-outro-photo {
   opacity: 0;
   transition: opacity 1100ms cubic-bezier(.33, 0, .2, 1);
   will-change: opacity;
 }
-.m-paged .section.is-active .m-stage,
-.m-paged .section.is-active .m-cover-logo,
-.m-paged .section.is-active .m-intro-fill,
-.m-paged .section.is-active .m-outro-photo { opacity: 1; }
-body.m-paged.nav-jump .m-stage,
-body.m-paged.nav-jump .m-cover-logo,
-body.m-paged.nav-jump .m-intro-fill,
-body.m-paged.nav-jump .m-outro-photo { transition-duration: 300ms; }
+.m-mode .section.is-active .m-stage,
+.m-mode .section.is-active .m-cover-logo,
+.m-mode .section.is-active .m-intro-fill,
+.m-mode .section.is-active .m-outro-photo { opacity: 1; }
+body.m-mode.nav-jump .m-stage,
+body.m-mode.nav-jump .m-cover-logo,
+body.m-mode.nav-jump .m-intro-fill,
+body.m-mode.nav-jump .m-outro-photo { transition-duration: 300ms; }
 
-.m-paged .section.is-active .m-el {
+.m-mode .section.is-active .m-el {
   animation: rise-in 1100ms cubic-bezier(.33, 0, .2, 1) both;
 }
 body.nav-jump .section.is-active .m-el,
-.m-paged .section.is-active.no-rise .m-el {
+.m-mode .section.is-active.no-rise .m-el {
   animation: none;
   opacity: 1;
 }
@@ -292,27 +264,17 @@ body.nav-jump .section.is-active .m-el,
 .m-poster { border: 3px solid #fff; }
 .m-sc-icon img { object-fit: contain; }
 
-/* ---- Waveform nav (short mobile version) ---------------------------------- */
+/* ---- Waveform nav: a copy on top of every page, as in the Figma frames;
+   its own section's group thickens when the page becomes active --------- */
 
-.m-nav-frame {
-  position: fixed;
+.m-nav {
+  position: absolute;
   left: 0;
   top: 0;
-  width: 100%;
-  height: 0;
-  z-index: 50;
-  pointer-events: none;
-}
-.m-nav-canvas {
-  position: absolute;
-  left: var(--mnx);
-  top: 0;
+  z-index: 2;
   width: 1288px;
   height: 230px;
-  transform: scale(var(--mns));
-  transform-origin: 0 0;
 }
-.m-nav { position: absolute; inset: 0; }
 
 /* bars row: 123px tall, centred on x 644.45 (Figma), top 32 */
 .m-nav__bars {
@@ -342,12 +304,12 @@ body.nav-jump .section.is-active .m-el,
   background: #fff;
   transition: width 450ms cubic-bezier(.2, .8, .2, 1);
 }
-.m-nav__group.is-active {
+.m-mode .section.is-active .m-nav__group.is-current {
   opacity: 1;
   gap: 6.5px;
   filter: drop-shadow(-2px 3px 10.5px rgba(var(--blue-glow), 0.66));
 }
-.m-nav__group.is-active .m-nav__bar { width: 9px; }
+.m-mode .section.is-active .m-nav__group.is-current .m-nav__bar { width: 9px; }
 
 .m-nav__line {
   position: absolute;
@@ -370,7 +332,7 @@ body.nav-jump .section.is-active .m-el,
   transform: translateX(-50%);
   transition: text-shadow 450ms ease;
 }
-.m-nav__label.is-active {
+.m-mode .section.is-active .m-nav__label.is-current {
   top: 178px;
   font-size: 20px;
   letter-spacing: 0.4px;

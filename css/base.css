@@ -362,7 +362,6 @@ body.on-outro-hero .wave-nav { opacity: 1; }
   transition: opacity 230ms cubic-bezier(.33, 0, .2, 1);
 }
 .jump-overlay.is-on { opacity: 1; }
-.m-scroll .jump-overlay { display: none; }
 
 /* Menu-click transitions only: the destination's content fades in faster so
    the whole hop (overlay 230ms + content 300ms) takes ~0.5s. Natural scroll

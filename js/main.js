@@ -1,18 +1,14 @@
 (function () {
   "use strict";
 
-  /* Phone vs tablet is decided by the SHORT side, not the window width:
-     portrait anything -> mobile paged; landscape with a short side < 600
-     (a phone on its side) -> mobile continuous scroll; else desktop. The
-     same queries pick the image files in <picture>, so layout and images
-     always switch together. */
-  var MQ_MOBILE = window.matchMedia("(orientation: portrait), (max-height: 599px)");
-  var MQ_SCROLL = window.matchMedia("(orientation: landscape) and (max-height: 599px)");
+  /* Any portrait screen gets the mobile version, any landscape screen
+     (including a phone on its side) the desktop one. The same query picks
+     the image files in <picture>, so layout and images switch together. */
+  var MQ_MOBILE = window.matchMedia("(orientation: portrait)");
 
   var journey = document.querySelector(".journey");
   var sections = Array.prototype.slice.call(document.querySelectorAll(".section"));
   var waveNav = document.getElementById("waveNav");
-  var mNav = document.getElementById("mNav");
   var root = document.documentElement;
   var body = document.body;
 
@@ -109,6 +105,9 @@
   }
 
   function buildMobileNav() {
+    var mNav = document.createElement("nav");
+    mNav.className = "m-nav";
+    mNav.setAttribute("aria-label", "Section navigation");
     var barsRow = document.createElement("div");
     barsRow.className = "m-nav__bars";
     M_NAV_LINES.forEach(function (d) {
@@ -142,15 +141,25 @@
       mNav.appendChild(label);
     });
     mNav.insertBefore(barsRow, mNav.firstChild);
-    mNav.addEventListener("click", function (e) {
-      var el = e.target.closest("[data-section]");
-      if (el) goToSection(el.dataset.section);
+
+    // one copy on top of every page, its own section marked as current
+    sections.forEach(function (sec) {
+      var copy = mNav.cloneNode(true);
+      var key = sec.dataset.section;
+      if (key) copy.querySelectorAll('[data-section="' + key + '"]').forEach(function (el) {
+        el.classList.add("is-current");
+      });
+      copy.addEventListener("click", function (e) {
+        var el = e.target.closest("[data-section]");
+        if (el) goToSection(el.dataset.section);
+      });
+      sec.querySelector(".m-stage").appendChild(copy);
     });
   }
 
   /* ---------------------------------------------------------------------
      2. Responsive mode: desktop 6000x3375 "stage" vs the mobile 1288x2800
-        canvas (paged in portrait, continuous in landscape) — on resize.
+        canvas (portrait screens) — recomputed on resize.
      ------------------------------------------------------------------- */
 
   function applyResponsiveMode() {
@@ -161,24 +170,11 @@
     // 16:9 stage overflow the viewport so its top/bottom get clipped.
     var h = (journey && journey.clientHeight) ? journey.clientHeight : window.innerHeight;
     var mobile = MQ_MOBILE.matches;
-    var scroll = mobile && MQ_SCROLL.matches;
     body.classList.toggle("stage-mode", !mobile);
     body.classList.toggle("m-mode", mobile);
-    body.classList.toggle("m-paged", mobile && !scroll);
-    body.classList.toggle("m-scroll", scroll);
     if (mobile) {
-      // portrait: contain-fit like desktop; landscape: fit the width and
-      // let the page scroll. --mxc is the side gap in canvas px, used to
-      // keep edge images on the screen edge.
-      var ms = scroll ? w / 1288 : Math.min(w / 1288, h / 2800);
-      var mx = (w - 1288 * ms) / 2;
-      // landscape: the waveform may take at most 20% of the screen height
-      var ns = scroll ? Math.min(ms, h * 0.2 / 201) : ms;
-      root.style.setProperty("--ms", ms);
-      root.style.setProperty("--mx", mx + "px");
-      root.style.setProperty("--mxc", mx / ms);
-      root.style.setProperty("--mns", ns);
-      root.style.setProperty("--mnx", (w - 1288 * ns) / 2 + "px");
+      // the mockup always fills the screen width; pages may be taller
+      root.style.setProperty("--ms", w / 1288);
     } else {
       // Contain-fit: the whole 6000x3375 stage always fits inside the
       // viewport, so real content (waveform, labels, headings, photos)
@@ -226,9 +222,6 @@
       el.classList.toggle("is-active", key && el.dataset.section === key);
     });
 
-    mNav.querySelectorAll(".m-nav__group, .m-nav__label").forEach(function (el) {
-      el.classList.toggle("is-active", key && el.dataset.section === key);
-    });
   }
 
   function updateActiveSection() {
@@ -246,9 +239,9 @@
       var dist = Math.abs(center - viewportCenter);
       if (dist < bestDist) { bestDist = dist; best = sec; }
     });
-    // landscape phone: sections differ in height, so take the one the
-    // screen centre is actually inside
-    if (body.classList.contains("m-scroll")) {
+    // mobile: pages are taller than the screen and differ in height, so
+    // take the one the screen centre is actually inside
+    if (body.classList.contains("m-mode")) {
       best = sections.find(function (sec) {
         return viewportCenter >= sec.offsetTop && viewportCenter < sec.offsetTop + sec.offsetHeight;
       }) || best;
@@ -275,8 +268,7 @@
      current view fades into the destination's background, the scroll jumps
      instantly while hidden, then the content fades in. No native smooth
      scroll (its easing read as abrupt on a one-section hop), and never a
-     scroll through the sections in between. The landscape-phone ribbon
-     (m-scroll) keeps a simple smooth scroll. */
+     scroll through the sections in between. */
   /* DROP connector: keep the hairline joining the poster's top-right corner
      to the playlist thumbnail's bottom-left corner while either image grows
      on hover. Each image scales about its own centre by the same factor the
@@ -354,12 +346,6 @@
     var cur = sections.findIndex(function (s) { return s.classList.contains("is-active"); });
     var ti = sections.indexOf(target);
     if (ti === cur || jumping) return;
-
-    if (body.classList.contains("m-scroll")) {
-      markNavJump(target);
-      target.scrollIntoView({ behavior: "smooth" });
-      return;
-    }
 
     jumping = true;
     body.classList.add("nav-jump");
