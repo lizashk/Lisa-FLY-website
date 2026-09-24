@@ -154,16 +154,19 @@
         if (el) goToSection(el.dataset.section);
       });
       sec.querySelector(".m-stage").appendChild(copy);
-
-      // extra snap points so a page taller than the screen can rest at its
-      // bottom (and middle), not only at its top — see .m-snap in mobile.css
-      ["end", "mid"].forEach(function (kind) {
-        var snap = document.createElement("span");
-        snap.className = "m-snap m-snap--" + kind;
-        snap.setAttribute("aria-hidden", "true");
-        sec.appendChild(snap);
-      });
     });
+
+    // mobile: each page fades in once, the first time it comes on screen
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) en.target.classList.add("is-seen");
+        });
+      }, { root: journey, threshold: 0.08 });
+      sections.forEach(function (sec) { io.observe(sec); });
+    } else {
+      sections.forEach(function (sec) { sec.classList.add("is-seen"); });
+    }
   }
 
   /* ---------------------------------------------------------------------
@@ -184,12 +187,6 @@
     if (mobile) {
       // the mockup always fills the screen width; pages may be taller
       root.style.setProperty("--ms", w / 1288);
-      // a middle stop is only needed when the top and bottom views leave a
-      // strip of the page unseen (page taller than two screens)
-      var pageH = Math.max(h, 2800 * w / 1288);
-      document.querySelectorAll(".m-snap--mid").forEach(function (el) {
-        el.style.display = pageH > 2 * h ? "" : "none";
-      });
     } else {
       // Contain-fit: the whole 6000x3375 stage always fits inside the
       // viewport, so real content (waveform, labels, headings, photos)

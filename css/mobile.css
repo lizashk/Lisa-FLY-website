@@ -3,8 +3,8 @@
    Own vertical master canvas 1288x2800 from the mobile Figma frames. Every
    element is placed by the same --l/--t/--w/--h canvas numbers as desktop and
    the whole .m-stage is scaled to the screen WIDTH by --ms = W/1288 (main.js),
-   so the mockup always spans edge to edge. A page is therefore usually a bit
-   taller than the screen and scrolls; the next page snaps in after it.
+   so the mockup always spans edge to edge. Pages are usually a bit taller
+   than the screen, so the phone scrolls freely (no snapping).
    Landscape phones get the desktop version. Desktop (.stage-mode) never
    matches any rule here except the display:none lines at the top.
    ========================================================================== */
@@ -12,7 +12,7 @@
 /* <picture> only swaps the file per device; it must not add a layout box */
 picture { display: contents; }
 
-.m-stage, .m-cover-logo, .m-intro-fill, .m-outro-ball, .m-outro-me, .m-snap { display: none; }
+.m-stage, .m-cover-logo, .m-intro-fill, .m-outro-ball, .m-outro-me { display: none; }
 
 .m-mode .stage,
 .m-mode .outro-corner,
@@ -21,14 +21,13 @@ picture { display: contents; }
 .m-mode .m-cover-logo,
 .m-mode .m-intro-fill,
 .m-mode .m-outro-ball,
-.m-mode .m-outro-me,
-.m-mode .m-snap { display: block; }
+.m-mode .m-outro-me { display: block; }
 
 /* ---- Sections ------------------------------------------------------------ */
 
-/* The journey keeps desktop's mandatory snapping: a page taller than the
-   screen scrolls freely to its own bottom, then the next swipe lands on the
-   next page's top — pages never stop half-way between each other. */
+/* Free scrolling: pages taller than the screen made Safari's snapping throw
+   the page back up or on to the next one. */
+.m-mode .journey { scroll-snap-type: none; }
 .m-mode .section {
   position: relative;
   width: 100vw;
@@ -36,24 +35,7 @@ picture { display: contents; }
   --sh: max(100dvh, calc(2800px * var(--ms)));
   height: var(--sh);
   overflow: hidden;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
-
-/* Snap points inside a page taller than the screen (added by main.js):
-   its bottom edge, and its middle when even two screens don't cover it.
-   Without them Safari only knows page tops and throws the page back up
-   (or on to the next page) when you scroll to see the bottom. */
-.m-snap {
-  position: absolute;
-  left: 0;
-  width: 1px;
-  height: 1px;
-  pointer-events: none;
-  scroll-snap-stop: always;
-}
-.m-snap--end { bottom: 0; scroll-snap-align: end; }
-.m-snap--mid { top: calc(50% - 0.5px); scroll-snap-align: center; }
 
 /* Backgrounds: dark blue everywhere, Lisa's photo on the cover. */
 .m-mode .section::before {
@@ -149,7 +131,8 @@ picture { display: contents; }
 .m-outro-ball img,
 .m-outro-me img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
-/* ---- Page transitions (same feel as desktop) ---------------------------- */
+/* ---- Page reveal: each page fades in once, the first time it scrolls into
+   view (.is-seen, set in main.js) ------------------------------------------ */
 
 .m-mode .m-stage,
 .m-mode .m-cover-logo,
@@ -158,27 +141,17 @@ picture { display: contents; }
 .m-mode .m-outro-me {
   opacity: 0;
   transition: opacity 1100ms cubic-bezier(.33, 0, .2, 1);
-  will-change: opacity;
 }
-.m-mode .section.is-active .m-stage,
-.m-mode .section.is-active .m-cover-logo,
-.m-mode .section.is-active .m-intro-fill,
-.m-mode .section.is-active .m-outro-ball,
-.m-mode .section.is-active .m-outro-me { opacity: 1; }
+.m-mode .section.is-seen .m-stage,
+.m-mode .section.is-seen .m-cover-logo,
+.m-mode .section.is-seen .m-intro-fill,
+.m-mode .section.is-seen .m-outro-ball,
+.m-mode .section.is-seen .m-outro-me { opacity: 1; }
 body.m-mode.nav-jump .m-stage,
 body.m-mode.nav-jump .m-cover-logo,
 body.m-mode.nav-jump .m-intro-fill,
 body.m-mode.nav-jump .m-outro-ball,
 body.m-mode.nav-jump .m-outro-me { transition-duration: 300ms; }
-
-.m-mode .section.is-active .m-el {
-  animation: rise-in 1100ms cubic-bezier(.33, 0, .2, 1) both;
-}
-body.nav-jump .section.is-active .m-el,
-.m-mode .section.is-active.no-rise .m-el {
-  animation: none;
-  opacity: 1;
-}
 
 /* ---- Type (Figma mobile text styles) -------------------------------------- */
 
@@ -429,7 +402,8 @@ body.nav-jump .section.is-active .m-el,
     pointer-events: none;
     color: transparent;
     text-shadow: none;
-    background: linear-gradient(120deg, transparent 42%, rgba(255,255,255,0.35) 46%, #fff 50%, rgba(255,255,255,0.35) 54%, transparent 58%);
+    background: linear-gradient(120deg, transparent 36%, rgba(255,255,255,0.6) 43%, #fff 47%, #fff 53%, rgba(255,255,255,0.6) 57%, transparent 64%);
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.9)) drop-shadow(0 0 22px rgba(var(--blue-glow), 0.9));
     background-size: 300% 100%;
     background-position: 100% 0;
     -webkit-background-clip: text;
