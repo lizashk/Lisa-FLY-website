@@ -184,6 +184,69 @@
       var scale = Math.min(w / 6000, h / 3375);
       root.style.setProperty("--scale", scale);
     }
+    fitIntroFills();
+    fitIntroBio();
+  }
+
+  /* INTRO bottom photo, when its strip is taller than Lisa's crop (desktop
+     screens squarer than 16:9, tall phones). The uncropped original extends
+     the crop both ways; the focus slides from the crop's centre to the
+     centre of Lisa's silhouette (source y 1180..2560) as the strip grows, so
+     her head gets air and she ends up centred. At the crop's own height the
+     framing is exactly the crop. */
+  var FILL_SRC = { w: 4520, h: 3416, silTop: 1180, silBottom: 2560 };
+  function fitIntroFill(img, cropTop, cropW, cropH) {
+    var box = img.closest(".intro-fill, .m-intro-fill");
+    var W = box.clientWidth, H = box.clientHeight;
+    if (!W || !H) return;
+    var iw = W * FILL_SRC.w / cropW;            // crop spans the full width
+    var hs = H * FILL_SRC.w / iw;               // strip height in source px
+    if (hs > FILL_SRC.h) { hs = FILL_SRC.h; iw = H * FILL_SRC.w / hs; }
+    var cropMid = cropTop + cropH / 2;
+    var silMid = (FILL_SRC.silTop + FILL_SRC.silBottom) / 2;
+    var roomy = FILL_SRC.silBottom - FILL_SRC.silTop + 300;   // + air both ends
+    var t = Math.max(0, Math.min(1, (hs - cropH) / (roomy - cropH)));
+    var focus = cropMid + (silMid - cropMid) * t;
+    var top = Math.max(0, Math.min(FILL_SRC.h - hs, focus - hs / 2));
+    var k = iw / FILL_SRC.w;
+    img.style.width = iw + "px";
+    img.style.left = Math.min(0, (W - iw) / 2) + "px";
+    img.style.top = -top * k + "px";
+  }
+  function fitIntroFills() {
+    var d = document.querySelector(".intro-fill__wide");
+    var m = document.querySelector(".m-intro-fill img");
+    if (d) fitIntroFill(d, 1152, 4519.8, 846.6);
+    if (m) fitIntroFill(m, 1117, 4512.8, 882.9);
+  }
+
+  /* INTRO bio (desktop): at some sizes the browser wraps one line more than
+     at the 1920x1080 master and the text runs onto the photo below. Shrink
+     it by fractions of a percent until it ends where the master does (98% of
+     the frame). The master itself ends at 97.9%, so it is never touched. */
+  function fitIntroBio() {
+    var bio = document.querySelector(".intro-frame .bio-copy");
+    var frame = document.querySelector(".intro-frame");
+    if (!bio || !frame) return;
+    bio.style.fontSize = bio.style.lineHeight = bio.style.letterSpacing = "";
+    if (!body.classList.contains("stage-mode")) return;
+    var cs = getComputedStyle(bio);
+    var fs = parseFloat(cs.fontSize), lh = parseFloat(cs.lineHeight), ls = parseFloat(cs.letterSpacing) || 0;
+    var last = bio.querySelector("p:last-child");
+    function over() {
+      var r = document.createRange();
+      r.selectNodeContents(last);
+      var bottom = 0;
+      Array.prototype.forEach.call(r.getClientRects(), function (c) { bottom = Math.max(bottom, c.bottom); });
+      var f = frame.getBoundingClientRect();
+      return bottom - f.top > f.height * 0.98;
+    }
+    for (var k = 1; over() && k > 0.85; ) {
+      k -= 0.005;
+      bio.style.fontSize = fs * k + "px";
+      bio.style.lineHeight = lh * k + "px";
+      bio.style.letterSpacing = ls * k + "px";
+    }
   }
 
   /* ---------------------------------------------------------------------
@@ -410,6 +473,7 @@
   buildMobileNav();
   applyResponsiveMode();
   updateActiveSection();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitIntroBio);
 
   window.addEventListener("resize", function () {
     var before = body.className.replace(/\b(nav-jump|on-cover)\b/g, "");

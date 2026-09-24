@@ -88,9 +88,8 @@ picture { display: contents; }
 .m-cover-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
 /* INTRO bottom photo: starts at canvas y 2548 and always reaches the bottom
-   edge and both side edges. Uses the uncropped original: Lisa's crop is its
-   full width from source y 1116, so the crop's top edge is pinned to the
-   strip's top and the rest of the original extends it downwards/sideways. */
+   edge. Uses the uncropped original so a taller strip (tall phones) shows
+   more of the photo around Lisa instead of zooming in. */
 .m-intro-fill {
   position: absolute;
   z-index: 1;
@@ -100,14 +99,11 @@ picture { display: contents; }
   top: calc(2548px * var(--ms));
   overflow: hidden;
 }
+/* size and position come from fitIntroFill in main.js */
 .m-intro-fill img {
-  --iw: max(calc(1290px * var(--ms)), 100vw, calc((var(--sh) - 2548px * var(--ms)) / 0.50885));
   position: absolute;
-  left: 50%;
-  top: calc(var(--iw) * -0.2469);
-  width: var(--iw);
   height: auto;
-  transform: translateX(-50%);
+  max-width: none;
 }
 
 /* OUTRO photo (disco ball + Lisa), always flush to the bottom */
