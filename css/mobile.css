@@ -181,8 +181,10 @@ body.m-mode.nav-jump .m-outro-me { transition-duration: 300ms; }
   text-align: justify;
 }
 .m-body p { margin: 0; }
-/* intro bio is set larger in the mockup: 22 lines filling its 1210px box */
-.m-body.m-bio { font-size: 34px; line-height: 55px; }
+/* intro bio: 22 lines filling its 1210px box, so the gap to the photos above
+   and below is equal (53px each). 36.2px is mid-range of the sizes that give
+   22 lines (35.6-36.9), so small font-rendering differences can't reflow it. */
+.m-body.m-bio { font-size: 36.2px; line-height: 55px; }
 .m-body.is-lower { text-transform: lowercase; }
 .m-emph {
   font-family: var(--font-body);
