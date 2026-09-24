@@ -131,27 +131,9 @@ picture { display: contents; }
 .m-outro-ball img,
 .m-outro-me img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
-/* ---- Page reveal: each page fades in once, the first time it scrolls into
-   view (.is-seen, set in main.js) ------------------------------------------ */
-
-.m-mode .m-stage,
-.m-mode .m-cover-logo,
-.m-mode .m-intro-fill,
-.m-mode .m-outro-ball,
-.m-mode .m-outro-me {
-  opacity: 0;
-  transition: opacity 1100ms cubic-bezier(.33, 0, .2, 1);
-}
-.m-mode .section.is-seen .m-stage,
-.m-mode .section.is-seen .m-cover-logo,
-.m-mode .section.is-seen .m-intro-fill,
-.m-mode .section.is-seen .m-outro-ball,
-.m-mode .section.is-seen .m-outro-me { opacity: 1; }
-body.m-mode.nav-jump .m-stage,
-body.m-mode.nav-jump .m-cover-logo,
-body.m-mode.nav-jump .m-intro-fill,
-body.m-mode.nav-jump .m-outro-ball,
-body.m-mode.nav-jump .m-outro-me { transition-duration: 300ms; }
+/* No page fade on mobile: fading a page's opacity makes the browser keep the
+   whole scaled 1288x2800 canvas in video memory at full size (~130 MB per
+   page on an iPhone) and iOS reloaded the tab after a few pages. */
 
 /* ---- Type (Figma mobile text styles) -------------------------------------- */
 
@@ -373,7 +355,6 @@ body.m-mode.nav-jump .m-outro-me { transition-duration: 300ms; }
     background-position: 100% 100%;
     -webkit-mask: var(--sheen-mask) center / cover no-repeat;
             mask: var(--sheen-mask) center / cover no-repeat;
-    opacity: 0;
   }
   .m-mode a.m-sc-icon::after {
     -webkit-mask-size: contain;
@@ -381,7 +362,7 @@ body.m-mode.nav-jump .m-outro-me { transition-duration: 300ms; }
   }
   .m-mode .section.is-active a.m-el:has(img)::after,
   .m-mode .section.is-active a.m-outro-ball::after {
-    animation: link-sheen 1500ms cubic-bezier(.45, 0, .55, 1) 600ms 1 both;
+    animation: m-sheen 1500ms cubic-bezier(.45, 0, .55, 1) 600ms 1 both;
   }
   .m-mode a.m-el:has(img),
   .m-mode a.m-outro-ball { transition: transform 140ms ease; }
@@ -410,10 +391,14 @@ body.m-mode.nav-jump .m-outro-me { transition-duration: 300ms; }
     background-position: 100% 0;
     -webkit-background-clip: text;
             background-clip: text;
-    opacity: 0;
   }
   .m-mode .section.is-active .m-dance::after,
   .m-mode .section.is-active .m-email::after {
-    animation: link-sheen 1500ms cubic-bezier(.45, 0, .55, 1) 600ms 1 both;
+    animation: m-sheen 1500ms cubic-bezier(.45, 0, .55, 1) 600ms 1 both;
   }
+}
+/* the streak starts and ends outside the picture, so only its position moves */
+@keyframes m-sheen {
+  from { background-position: 100% 100%; }
+  to   { background-position: 0% 0%; }
 }
