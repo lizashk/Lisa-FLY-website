@@ -31,8 +31,9 @@ picture { display: contents; }
 .m-mode .section {
   position: relative;
   width: 100vw;
-  /* the scaled mockup, or the screen if that is taller */
-  --sh: max(100dvh, calc(2800px * var(--ms)));
+  /* the scaled mockup (--ch = its canvas height, 2800 unless a page is
+     shorter), or the screen if that is taller */
+  --sh: max(100dvh, calc(var(--ch, 2800) * 1px * var(--ms)));
   height: var(--sh);
   overflow: hidden;
 }
@@ -86,6 +87,25 @@ picture { display: contents; }
 }
 .m-cover-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
+/* Cover and outro are exactly one screen, never scrolled through. */
+.m-mode .section[data-role="cover"],
+.m-mode .section[data-section="outro"] { --sh: 100dvh; }
+
+/* Tablets (portrait but much wider than a phone): the uncropped cover photo,
+   framed on Lisa, logo glued to the photo to the right of her head. */
+@media (orientation: portrait) and (min-aspect-ratio: 62/100) {
+  .m-mode .section[data-role="cover"]::before {
+    background: #8a3fd8 url(../assets/img/m/cover-wide.webp) 46% 0 / cover no-repeat;
+  }
+  .m-mode .m-cover-logo {
+    --pw: max(100vw, calc(var(--sh) * 5904 / 3321));
+    left: calc((100vw - var(--pw)) * 0.46 + var(--pw) * 0.49);
+    top: calc(var(--pw) * 0.5625 * 0.13);
+    width: calc(var(--pw) * 0.15);
+    height: calc(var(--pw) * 0.15 * 459 / 577);
+  }
+}
+
 /* INTRO bottom photo: starts at canvas y 2548 and always reaches the bottom
    edge. Uses the uncropped original so a taller strip (tall phones) shows
    more of the photo around Lisa instead of zooming in. */
@@ -116,16 +136,18 @@ picture { display: contents; }
 .m-outro-ball {
   --w: 1437.3;
   left: calc(-76.4px * var(--ms));
-  bottom: calc(631.7px * var(--ms));
+  top: calc(750.3px * var(--ms));
   width: calc(1437.3px * var(--ms));
   height: calc(1418px * var(--ms));
   clip-path: circle(50%);
 }
+/* Lisa shrinks (--oa, main.js) when the screen is too short to show her at
+   the page scale under the email; the ball keeps the page width behind her */
 .m-outro-me {
-  left: calc(52.7px * var(--ms));
-  bottom: calc(-52.1px * var(--ms));
-  width: calc(1180px * var(--ms));
-  height: calc(1948.4px * var(--ms));
+  left: calc(50% - 591.3px * var(--oa, var(--ms)));
+  bottom: calc(-52.1px * var(--oa, var(--ms)));
+  width: calc(1180px * var(--oa, var(--ms)));
+  height: calc(1948.4px * var(--oa, var(--ms)));
   pointer-events: none;
 }
 .m-outro-ball img,
@@ -179,6 +201,7 @@ picture { display: contents; }
   white-space: nowrap;
   text-shadow: 0 0 21px rgba(var(--blue-glow), 0.55);
 }
+.m-list .m-hang { visibility: hidden; }   /* keeps a wrapped item under its first word */
 .m-list {
   font-family: var(--font-body);
   font-weight: 700;

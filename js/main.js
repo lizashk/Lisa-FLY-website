@@ -187,6 +187,9 @@
     if (mobile) {
       // the mockup always fills the screen width; pages may be taller
       root.style.setProperty("--ms", w / 1288);
+      // outro is one screen: Lisa gets the height left under the email
+      var ms = w / 1288, outro = document.querySelector('section[data-section="outro"]');
+      if (outro) outro.style.setProperty("--oa", Math.min(ms, (h - 755 * ms) / 2045));
     } else {
       // Contain-fit: the whole 6000x3375 stage always fits inside the
       // viewport, so real content (waveform, labels, headings, photos)
@@ -232,10 +235,13 @@
     if (m) fitIntroFill(m, 1117, 4512.8, 882.9);
   }
 
-  /* INTRO bio (desktop): at some sizes the browser wraps one line more than
-     at the 1920x1080 master and the text runs onto the photo below. Shrink
-     it by fractions of a percent until it ends where the master does (98% of
-     the frame). The master itself ends at 97.9%, so it is never touched. */
+  /* INTRO bio (desktop): the text should end where it does on the 1920x1080
+     master (97.9% of the frame), so it always fills the space beside the
+     photos. Where the browser wraps an extra line (text runs onto the photo)
+     it shrinks by fractions of a percent; where the font comes out smaller
+     than the frame needs (iPad, very wide screens) it grows until the text
+     reaches the same place. The master itself is inside the 95-98% band and
+     is never touched. */
   function fitIntroBio() {
     var bio = document.querySelector(".intro-frame .bio-copy");
     var frame = document.querySelector(".intro-frame");
@@ -245,19 +251,34 @@
     var cs = getComputedStyle(bio);
     var fs = parseFloat(cs.fontSize), lh = parseFloat(cs.lineHeight), ls = parseFloat(cs.letterSpacing) || 0;
     var last = bio.querySelector("p:last-child");
-    function over() {
+    function fill() {
       var r = document.createRange();
       r.selectNodeContents(last);
       var bottom = 0;
       Array.prototype.forEach.call(r.getClientRects(), function (c) { bottom = Math.max(bottom, c.bottom); });
       var f = frame.getBoundingClientRect();
-      return bottom - f.top > f.height * 0.98;
+      return (bottom - f.top) / f.height;
     }
-    for (var k = 1; over() && k > 0.85; ) {
-      k -= 0.005;
+    function size(k) {
       bio.style.fontSize = fs * k + "px";
       bio.style.lineHeight = lh * k + "px";
       bio.style.letterSpacing = ls * k + "px";
+    }
+    var k = 1;
+    if (fill() > 0.98) {
+      while (fill() > 0.98 && k > 0.85) { k -= 0.005; size(k); }
+    } else if (fill() < 0.95) {
+      while (k < 1.6) {
+        size(k + 0.005);
+        if (fill() > 0.98) { size(k); break; }
+        k += 0.005;
+      }
+      // one more line would not fit: spread the lines a little instead
+      for (var g = 1; fill() < 0.965 && g < 1.25; ) {
+        g += 0.005;
+        bio.style.lineHeight = lh * k * g + "px";
+        if (fill() > 0.98) { g -= 0.005; bio.style.lineHeight = lh * k * g + "px"; break; }
+      }
     }
   }
 
