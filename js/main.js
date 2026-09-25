@@ -191,16 +191,19 @@
       root.style.setProperty("--ms", w / 1288);
       // outro is one screen. Phones: Lisa and the ball shrink together to
       // fit under the email (ball top 78 canvas px below it, 2110.1 = ball
-      // top to Lisa's bottom at her scale), so the ball is never cut at the
-      // sides. Tablets: the text is smaller (mobile.css), the ball keeps the
-      // page width right under the email, Lisa gets the height below.
+      // top to Lisa's bottom at her scale); the ball then grows to the
+      // screen width, never cut at the sides. Tablets: the text is smaller
+      // (mobile.css), the ball keeps the page width right under the email,
+      // Lisa gets the height below.
       var ms = w / 1288, outro = document.querySelector('section[data-section="outro"]');
       if (outro) {
         var oa, ob, obt;
         if (MQ_TABLET.matches) {
           oa = Math.min(ms, (h - 547 * ms) / 2045); ob = ms; obt = 542 * ms;
         } else {
-          oa = Math.min(ms, (h - 750.3 * ms) / 2110.1); ob = oa; obt = h - 2110.1 * oa;
+          // the ball is as wide as the screen when Lisa shrinks (never cut)
+          oa = Math.min(ms, (h - 750.3 * ms) / 2110.1); ob = Math.max(oa, Math.min(ms, w / 1437.3));
+          obt = h - 2110.1 * oa;
         }
         outro.style.setProperty("--oa", oa);
         outro.style.setProperty("--ob", ob);
