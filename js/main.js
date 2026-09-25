@@ -213,6 +213,13 @@
       // up to 60px more air under LINKS and the rest split evenly above the
       // title (56px to the waveform labels) and below the last vinyl (83px);
       // on tablets 60px more under LINKS, taken from the 3 gaps between vinyls.
+      // build / peak: room below the 2800px mockup goes into the 3 gaps
+      // between rows; peak on phones also gives 34px of its bottom margin
+      var extra28 = Math.max(0, h / ms - 2800);
+      var build = document.querySelector('section[data-section="build"]');
+      if (build) build.style.setProperty("--gd", extra28 / 3);
+      var peak = document.querySelector('section[data-section="peak"]');
+      if (peak) peak.style.setProperty("--gd", (extra28 + (MQ_TABLET.matches ? 0 : 34)) / 3);
       var release = document.querySelector('section[data-section="release"]');
       if (release) {
         var extra = Math.max(0, h / ms - 2538);

@@ -129,7 +129,7 @@ picture { display: contents; }
   .m-mode .section[data-role="cover"] {
     --tpw: max(100vw, calc(var(--sh) * 4267 / 2400));
     --cx: clamp(calc(100vw - var(--tpw)), calc(100vw * 699.5 / 1288 - var(--tpw) * 0.4418), 0px);
-    --lw: min(calc(var(--tpw) * 0.15),
+    --lw: min(calc(var(--tpw) * 0.12),
               calc(var(--cx) + var(--tpw) * 0.3949 - 37px * var(--ms) - 20px * var(--ms)));
   }
   .m-mode .section[data-role="cover"]::before {
@@ -205,6 +205,16 @@ picture { display: contents; }
    --ri; the title has --rk:0 so only --rs moves it. */
 .m-mode .section[data-section="release"] .m-el {
   translate: 0 calc((var(--rs, 0) * (0.5 + var(--ri, 0) / 6) + var(--rg, 0) * var(--rk, 1) - var(--rv, 0) * var(--ri, 0)) * 1px);
+}
+
+/* BUILD and PEAK: extra room goes into the gaps (main.js --gd, canvas px
+   per step; each element carries its row index --gi): build spreads the
+   CDs when the screen is taller than the mockup, so the bottom margin stays
+   as in the mockup; peak on phones also moves 34px of its bottom margin
+   into the gaps between the videos. */
+.m-mode .section[data-section="build"] .m-el,
+.m-mode .section[data-section="peak"] .m-el {
+  translate: 0 calc(var(--gd, 0) * var(--gi, 0) * 1px);
 }
 
 /* ---- Type (Figma mobile text styles) -------------------------------------- */
