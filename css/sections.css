@@ -279,33 +279,34 @@ body.nav-jump .section.is-active .stage .h-hero-link,
 .stage-mode .speech-bubble span { font-size: 56px; }
 
 
-/* --- Touch devices (iPad etc., no mouse): show that images are links ------
-   1) A one-time glossy sheen sweeps corner to corner across every linked
-      image when its section appears (every visit). Masked with the image's
-      own picture (--sheen-mask, set in main.js) so it follows the real shape
-      — round vinyls and the round SoundCloud icon don't get a square streak.
-   2) Tap feedback: the same brighten + ~12px grow as the desktop hover.
-   Mouse devices (hover: hover) never see any of this. */
+/* --- Show that images are links -----------------------------------------
+   1) Every device: a one-time glossy sheen sweeps corner to corner across
+      every linked image when its section appears (every visit). Masked with
+      the image's own picture (--sheen-mask, set in main.js) so it follows
+      the real shape — round vinyls and the round SoundCloud icon don't get
+      a square streak. (Was touch-only; Lisa asked for it on desktop too.)
+   2) Touch devices (iPad etc., no mouse): tap feedback, the same brighten
+      + ~12px grow as the desktop hover. */
+.stage-mode a.el:not(.logo-link):has(img)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, transparent 45%, rgba(255,255,255,0.18) 47.5%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.18) 52.5%, transparent 55%);
+  background-size: 300% 300%;
+  background-position: 100% 100%;
+  -webkit-mask: var(--sheen-mask) center / cover no-repeat;
+          mask: var(--sheen-mask) center / cover no-repeat;
+  opacity: 0;
+}
+.stage-mode a.el:has(.soundcloud-icon)::after {
+  -webkit-mask-size: contain;
+          mask-size: contain;
+}
+.stage-mode .section.is-active a.el:not(.logo-link):has(img)::after {
+  animation: link-sheen 1500ms cubic-bezier(.45, 0, .55, 1) 600ms 1 backwards;
+}
 @media (hover: none) {
-  .stage-mode a.el:not(.logo-link):has(img)::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(120deg, transparent 45%, rgba(255,255,255,0.18) 47.5%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.18) 52.5%, transparent 55%);
-    background-size: 300% 300%;
-    background-position: 100% 100%;
-    -webkit-mask: var(--sheen-mask) center / cover no-repeat;
-            mask: var(--sheen-mask) center / cover no-repeat;
-    opacity: 0;
-  }
-  .stage-mode a.el:has(.soundcloud-icon)::after {
-    -webkit-mask-size: contain;
-            mask-size: contain;
-  }
-  .stage-mode .section.is-active a.el:not(.logo-link):has(img)::after {
-    animation: link-sheen 1500ms cubic-bezier(.45, 0, .55, 1) 600ms 1 both;
-  }
   .stage-mode a.el:not(.logo-link):has(img) {
     transition: transform 140ms ease;
   }
@@ -315,6 +316,8 @@ body.nav-jump .section.is-active .stage .h-hero-link,
   }
   .stage-mode a.el:not(.logo-link):has(img):active img { filter: brightness(1.14); }
 }
+/* not held after the sweep ("backwards"): the streak then leaves no trace
+   and the images render exactly as before */
 @keyframes link-sheen {
   0%   { opacity: 1; background-position: 100% 100%; }
   100% { opacity: 1; background-position: 0% 0%; }

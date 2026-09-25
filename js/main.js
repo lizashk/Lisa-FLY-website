@@ -546,6 +546,15 @@
   applyResponsiveMode();
   updateActiveSection();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitIntroBio);
+  // Safari can report the fonts ready before Hemi Head is actually applied;
+  // measure again whenever a font finishes loading and once the page is in
+  if (document.fonts && document.fonts.addEventListener) {
+    document.fonts.addEventListener("loadingdone", fitIntroBio);
+  }
+  window.addEventListener("load", function () {
+    fitIntroBio();
+    setTimeout(fitIntroBio, 800);
+  });
 
   window.addEventListener("resize", function () {
     var before = body.className.replace(/\b(nav-jump|on-cover)\b/g, "");

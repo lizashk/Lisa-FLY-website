@@ -300,6 +300,11 @@ body.on-outro-hero .wave-nav { opacity: 1; }
   top: calc(59px - (100dvh / var(--scale) - 3375px) / 2);
   height: 282px;
 }
+/* outro logo: centred on the whole waveform block, bars + labels (canvas
+   109..378, mid 244), not on the bars alone — Lisa found it too high */
+.stage-mode .section[data-section="outro"] .stage > .logo-link {
+  top: calc(103px - (100dvh / var(--scale) - 3375px) / 2);
+}
 
 /* ---- OUTRO: "let's DANCE together" + email glued to the PHOTO ------------
    The outro photo is a cover-fit background (2600x1462) that scales and
@@ -355,6 +360,17 @@ body.on-outro-hero .wave-nav { opacity: 1; }
 .stage-mode .section[data-section="break"] .stage,
 .stage-mode .section[data-section="peak"] .stage {
   transform: scale(var(--scale)) translateY(var(--vshift));
+}
+/* PEAK on screens taller than 16:9: more air between the two top videos
+   and the bottom row (Breaks Session + SoundCloud, kept level). The gap
+   grows by --pg (0 at 16:9, 0.4 of the surplus height, at most 460 canvas
+   px); the top row moves up and the bottom row down by half of it, so the
+   content stays centred. Rows carry --pr: -1 top, +1 bottom. */
+.stage-mode .section[data-section="peak"] {
+  --pg: clamp(0px, (100dvh / var(--scale) - 3375px) * 0.4, 460px);
+}
+.stage-mode .section[data-section="peak"] .stage .el[style*="--pr"] {
+  translate: 0 calc(var(--pg) * var(--pr) / 2);
 }
 .stage-mode .section[data-section="drop"] .stage > .h-kicker,
 .stage-mode .section[data-section="break"] .stage > .h-kicker,
