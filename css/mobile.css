@@ -122,7 +122,8 @@ picture { display: contents; }
    at full screen height, Lisa's head (photo x 44.18%) under the BREAK label
    (canvas x 699.5), never leaving a gap at the sides. Logo on the left:
    glued to the photo's height, its left edge where the waveform bars start
-   (canvas x 37; the file has 2/866 of empty margin on the left), never
+   (canvas x 37; logo-left, L and F aligned left, has 3/1154 of empty
+   margin on the left), never
    wider than the room left of her headphones (photo x 39.49%). */
 @media (orientation: portrait) and (min-aspect-ratio: 62/100) {
   .m-mode .section[data-role="cover"] {
@@ -135,11 +136,11 @@ picture { display: contents; }
     background: #8a3fd8 url(../assets/img/m/cover-wide.webp) var(--cx) 0 / var(--tpw) auto no-repeat;
   }
   .m-mode .m-cover-logo {
-    left: calc(37px * var(--ms) - var(--lw) * 2 / 866);
+    left: calc(37px * var(--ms) - var(--lw) * 3 / 1154);
     right: auto;
     top: calc(var(--tpw) * 0.5625 * 0.13);
     width: var(--lw);
-    height: calc(var(--lw) * 459 / 577);
+    height: calc(var(--lw) * 910 / 1154);
   }
 }
 
